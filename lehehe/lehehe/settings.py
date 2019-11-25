@@ -41,7 +41,6 @@ INSTALLED_APPS = [
      'account',
      'article',
      'mainpage',
-     'docs',
 ]
 
 MIDDLEWARE = [
@@ -118,7 +117,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-DOCS_ROOT = "/templates/docs"
+#DOCS_ROOT = "/templates/docs"
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
