@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}my information{% endblock %}
+{% block content %}
+<div class="row text-center vertical-middle-sm">
+        <li><a href="{% url 'account:my_information' %}">个人信息</a></li>
+        <li><a href="{% url 'account:edit_my_information' %}">完善信息</a></li>
+        <li><a href="{% url 'account:password_change' %}">修改密码</a></li>
+        
+</div>
+{% endblock %}

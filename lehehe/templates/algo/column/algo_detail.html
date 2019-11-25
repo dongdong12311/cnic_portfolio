@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block title %}articles list{% endblock %}
+{% block content %}
+<div>
+    <header>
+        <h1>{{ algo.title }}</h1>
+    </header>
+    {% for key in algo.get_attrs_that_is_not_None %}
+        <p>{{key.first}} {{key.second}}</p>
+    {% endfor %}
+    
+    <td>
+         <a name="edit" href="{% url 'article:run_test' algo.id %}">模型运行</a>
+    </td>
+</div>
+{% endblock %}

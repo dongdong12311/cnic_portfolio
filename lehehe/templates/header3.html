@@ -1,0 +1,57 @@
+{% load staticfiles %}
+<head>
+	<title>Cryptocurrency - Landing Page Template</title>
+	<meta charset="UTF-8">
+	<meta name="description" content="Cryptocurrency Landing Page Template">
+	<meta name="keywords" content="cryptocurrency, unica, creative, html">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!-- Favicon -->
+	<link href="{% static "img/favicon.ico" %}" rel="shortcut icon"/>
+
+	<!-- Google Fonts -->
+	<link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+
+	<!-- Stylesheets -->
+	<link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}"/>
+	<link rel="stylesheet" href="{% static "css/font-awesome.min.css" %}"/>
+	<link rel="stylesheet" href="{% static "css/themify-icons.css" %}"/>
+	<link rel="stylesheet" href="{% static "css/animate.css" %}"/>
+	<link rel="stylesheet" href="{% static "css/owl.carousel.css" %}"/>
+	<link rel="stylesheet" href="{% static "css/style.css" %}"/>
+
+
+
+</head>
+<body>
+	<!-- Page Preloder -->
+	<div id="preloder">
+		<div class="loader"></div>
+	</div>
+
+	<!-- Header section -->
+	<header class="header-section clearfix">
+		<div class="container-fluid">
+			<a href="/" class="site-logo">
+				<!--img src="{% static "img/logo.jpg" %}" alt=""-->
+			</a>
+			<div class="responsive-bar"><i class="fa fa-bars"></i></div>
+			<a href="" class="user"><i class="fa fa-user"></i></a>
+			<a href="" class="site-btn">登录</a>
+			<nav class="main-menu">
+				<ul class="menu-list">
+    				<li><a href="">我的模型</a></li>
+					<li><a href="">模型设计</a></li>
+					<li><a href="">参数优化</a></li>
+					<li><a href="">API文档</a></li>
+					<li><a href="">我的主页</a></li>
+				</ul>
+			</nav>
+		</div>
+	</header>
+	
+	<!--====== Javascripts & Jquery ======-->
+	<script src="{% static "js/jquery-3.2.1.min.js" %}"></script>
+	<script src="{% static "js/owl.carousel.min.js" %}"></script>
+	<script src="{% static "js/main.js" %}"></script>
+</body>
+

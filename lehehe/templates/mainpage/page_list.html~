@@ -1,0 +1,22 @@
+{% load staticfiles %}
+
+
+<h1>CNICPortfolio</h1>
+<div class="container">
+	
+    <nav class="navbar navbar-default" role="navigation">
+        <div>
+        		
+            <ul class="nav navbar-nav navbar-right" style="margin-right:10px">
+                
+                <li><a href="#">主页</a></li>
+                <li><a href="{% url 'article:article_column' %}">我的模型</a></li>
+                <li><a href="{% url 'article:article_column' %}">模型设计</a></li>
+                <li><a href="{% url 'article:article_column' %}">参数优化</a></li>
+						<li><a href="{% url 'article:article_column' %}">API文档</a></li>
+                <li><a href="{% url 'account:my_information' %}">我的主页</a></li>
+                            
+            </ul>
+        </div>
+    </nav>
+</div>
