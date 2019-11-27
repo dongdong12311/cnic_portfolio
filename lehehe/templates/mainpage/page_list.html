@@ -1,6 +1,6 @@
 {% load staticfiles %}
 <head>
-	<title>Cryptocurrency - Landing Page Template</title>
+	<title>CNICPortfolio 高性能投资组合计算平台</title>
 	<meta charset="UTF-8">
 	<meta name="description" content="Cryptocurrency Landing Page Template">
 	<meta name="keywords" content="cryptocurrency, unica, creative, html">
@@ -45,12 +45,11 @@
 				<li><a href="{% static "docs/index.html" %}"/>API文档</a></li>
                 <li><a href="{% url 'account:my_home_page' %}">个人信息</a></li>
                 {% if user.is_authenticated %}
-                <li><a href="{% url 'account:user_logout' %}">登出</a></li>
+                <li><a href="{% url 'account:user_logout' %}">退出登录</a></li>
                 <li>           </li>
                 {% else %}
                 <li><a href="{% url 'account:user_login' %}">登录</a></li>
                 <li><a href="{% url 'account:user_register' %}">注册</a></li>
-                <li><a href="{% url 'account:password_reset' %}">密码重置</a></li>
                 {% endif %}
 				</ul>
 			</nav>

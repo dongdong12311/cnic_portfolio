@@ -6,11 +6,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static  "css/bootstrap.css" %}">
 </head>
 <body>
 {% include "header2.html" %}
-<div class="container">
+<div class="container-fluid">
     {% block content %} {% endblock %}
 </div>
 {% block javascript %} {% endblock %}

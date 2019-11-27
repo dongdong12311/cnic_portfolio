@@ -1,43 +1,137 @@
-{% extends "base.html" %}
+
 {% load staticfiles %}
-{% block title %}register user{% endblock %}
+{% block title %}{% endblock %}
 
 {% block content %}
-<div class="row text-center vertical-middle-sm">
-    <h1>Register</h1>
-    <p>If you are a user, <strong><a href="{% url 'account:user_login' %}">Login</a> </strong>,please</p>
-    <p>or register.</p>
-    <form class="form-horizontal" action="." method="post">{% csrf_token %}
-        <div class="form-group">
-            <label for="{{ form.username.id_for_label }}" class="col-md-5 control-label">Username</label>
-            <div class="col-md-6 text-left">{{ form.username }}</div>
-        </div>
 
-        <div class="form-group">
-            <label for="{{ form.email.id_for_label }}" class="col-md-5 control-label"> Email</label>
-            <div class="col-md-6 text-left">{{ form.email }}</div>
-        </div>
+<head>
+    <title>用户登录</title>
+    <!-- Meta-Tags -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <meta name="keywords" content="Quick Signin & Signup form a Responsive Web Template, Bootstrap Web Templates, Flat Web Templates, Android Compatible Web Template, Smartphone Compatible Web Template, Free Webdesigns for Nokia, Samsung, LG, Sony Ericsson, Motorola Web Design">
+    <script>
+        addEventListener("load", function () {
+            setTimeout(hideURLbar, 0);
+        }, false);
 
-        <div class="form-group">
-            <label for="{{ form.password.id_for_label }}" class="col-md-5 control-label">Password</label>
-            <div class="col-md-6 text-left">{{ form.password }}</div>
-        </div>
+        function hideURLbar() {
+            window.scrollTo(0, 1);
+        }
+    </script>
+    <link rel="stylesheet" href="{% static "loginform/css/style.css" %}" type="text/css" media="all">
 
-        <div class="form-group">
-            <label for="{{ form.password.id_for_label }}" class="col-md-5 control-label"> Confirm Password</label>
-            <div class="col-md-6 text-left">{{ form.password2 }}</div>
-        </div>
-        <div class="form-group">
-            <label for="{{ profile.birth.id_for_label }}" class="col-md-5 control-label"> Birth Date</label>
-            <div class="col-md-6 text-left">{{ profile.birth }}</div>
-        </div>
+    <link href="//fonts.googleapis.com/css?family=Dosis:200,300,400,500,600,700,800" rel="stylesheet">
+	<!-- Google Fonts -->
+	<link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
 
-        <div class="form-group">
-            <label for="{{ profile.phone.id_for_label }}" class="col-md-5 control-label">Phone</label>
-            <div class="col-md-6 text-left">{{ profile.phone }}</div>
-        </div>
+	<!-- Stylesheets -->
+	<link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}"/>
+	<link rel="stylesheet" href="{% static "css/font-awesome.min.css" %}"/>
+	<link rel="stylesheet" href="{% static "css/themify-icons.css" %}"/>
+	<link rel="stylesheet" href="{% static "css/animate.css" %}"/>
+	<link rel="stylesheet" href="{% static "css/owl.carousel.css" %}"/>
+	<link rel="stylesheet" href="{% static "css/style.css" %}"/>
+</head>
 
-        <input type="submit" class="btn btn-primary btn-lg" value="REGISTER">
-    </form>
-</div>
+<body>
+	<header class="header-section clearfix">
+		<div class="container-fluid">
+			<a href="/" class="site-logo">
+				<!--img src="{% static "img/logo.jpg" %}" alt=""-->
+			</a>
+			<div class="responsive-bar"><i class="fa fa-bars"></i></div>
+			<a href="" class="user"><i class="fa fa-user"></i></a>
+			<nav class="main-menu">
+				<ul class="menu-list">
+                <li><a href="/">主页</a></li>
+                <li><a href="{% url 'article:myalgo_list' %}">我的模型</a></li>
+                <li><a href="{% url 'article:myalgo_post' %}">模型设计</a></li>
+                <li><a href="{% url 'article:article_list' %}">参数优化</a></li>
+				<li><a href="{% static "docs/index.html" %}"/>API文档</a></li>
+                <li><a href="{% url 'account:my_home_page' %}">个人信息</a></li>
+                {% if user.is_authenticated %}
+                <li><a href="{% url 'account:user_logout' %}">退出登录</a></li>
+                <li>           </li>
+                {% else %}
+                <li><a href="{% url 'account:user_login' %}">登录</a></li>
+                <li><a href="{% url 'account:user_register' %}">注册</a></li>
+                {% endif %}
+				</ul>
+			</nav>
+		</div>
+	</header>
+	<h1>&nbsp</h1>
+    <header>
+        <h1 class="title-agile text-center"> </h1>
+    </header>
+    <!-- //header -->
+    <section class="login-wrap">
+        <div class="main_w3agile">
+            <input id="tab-1" type="radio" name="tab" class="sign-in" checked>
+            <label for="tab-1" class="tab">注册</label>
+            <input id="tab-2" type="radio" name="tab" class="sign-up">
+            <label for="tab-2" class="tab"></label>
+            <div class="login-form">
+                <!-- signin form -->
+                <div class="signin_wthree">
+                    <form method="post" action=".">{% csrf_token %}
+                        <div class="group">
+                            <label for="{{ form.username.id_for_label }}" class="label">用户名</label>
+                             {{form.username}}
+                        </div>
+                        
+                        <div class="group">
+                            <label for="{{ form.password.id_for_label }}" class="label">密码</label>
+                            {{ form.password }}
+                        </div>
+                        <div class="group">
+                            <label for="{{ form.password.id_for_label }}" class="label">确认密码</label>
+                            {{ form.password2 }}
+                        </div>
+                        <div class="group">
+                            <label for="{{ form.email.id_for_label }}" class="label">电子邮件</label>
+                            {{ form.email }}
+                        </div>
+                        <div class="group">
+                            <input type="submit" class="button" value="注册">
+                        </div>
+                        <div class="hr"></div>
+                        <div class="foot-lnk">
+                            <label for="tab-1">Already Member? </label>
+                        </div>
+                    </form>
+                </div>
+                <!-- //signin form -->
+                <!-- signup form -->
+                <div class="signup_wthree">
+
+                </div>
+                <!-- //signup form -->
+            </div>
+        </div>
+    </section>
+    <!-- //section -->
+
+    <!-- //footer -->
+    <!-- script for password match -->
+    <script>
+        window.onload = function () {
+            document.getElementById("password1").onchange = validatePassword;
+            document.getElementById("password2").onchange = validatePassword;
+        }
+
+        function validatePassword() {
+            var pass2 = document.getElementById("password2").value;
+            var pass1 = document.getElementById("password1").value;
+            if (pass1 != pass2)
+                document.getElementById("password2").setCustomValidity("两次输入密码不一致");
+            else
+                document.getElementById("password2").setCustomValidity('');
+            //empty string means no validation error
+        }
+    </script>
+    <!-- script for password match -->
+</body>
+
 {% endblock %}

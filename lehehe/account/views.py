@@ -10,12 +10,13 @@ from django.contrib.auth.models import User
 def user_login(request):
     if request.method == "POST":
         login_form = LoginForm(request.POST)
+        
         if login_form.is_valid():
             cd = login_form.cleaned_data
             user = authenticate(username=cd['username'], password=cd['password'])
             if user:
                 login(request, user)
-                return HttpResponse("Welcome You. You have been authenticated successfully")
+                return render(request,'mainpage/page_list.html')
             else:
                 return HttpResponse("Sorry. Your username or password is not right.")
         else:
@@ -23,6 +24,7 @@ def user_login(request):
 
     if request.method == "GET":
         login_form = LoginForm()
+        
         return render(request, "account/login.html", {"form": login_form})
 
 
