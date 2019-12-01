@@ -168,7 +168,8 @@ def redit_article(request, article_id):
         
         
         
-        
+def date_to_int(date):
+    return date.year * 10000 + date.month * 100 + date.day
         
         
         
@@ -186,8 +187,9 @@ def ParseMyalgoPost(algo):
     cov_method  = algo.cov_method
     balanced_dates = int(algo.balanced_dates)
     benchmark = algo.benchmark
-    res = {"stragety": name_map[name], "start": 20180101, 
-     "end": 20181230, "initial_capital": initial_capital, 
+    
+    res = {"stragety": name_map[name], "start": date_to_int(algo.start_date), 
+     "end": date_to_int(algo.end_date), "initial_capital": initial_capital, 
      "benchmark": benchmark, 
      "balanced_dates": {"method": "equal_difference", "param": balanced_dates},
      "stocks": ["000001.SZ", "000002.SZ", "000004.SZ", "000005.SZ", 
@@ -209,10 +211,13 @@ def ParseMyalgoPost(algo):
         
 import json
 import sys
-sys.path.append('/home/dongdong/桌面/platform/examples')
+from django.conf import settings
+import pandas as pd
+sys.path.append(settings.EXAMPLE_PATH)
 from trading_system.engine import Run_func
 from trading_system.plot.plot import plot_result
 from trading_system.generate_parameter import generate,print_tree,generate_all_param
+from trading_system.portfolio.summarise import Cal
 @login_required(login_url='/account/login')
 @csrf_exempt
 def run_test(request,article_id):
@@ -221,7 +226,56 @@ def run_test(request,article_id):
         config = ParseMyalgoPost(algo)
         stragety = __import__(config['stragety'])
         res = Run_func(stragety.initialize,stragety.handle_data,config)
-        return HttpResponse(str(res))
+        data = res['sys_analyser']
+        portfolio_series = data['portfolio']['unit_net_value']
+        market_series = data['benchmark_portfolio']['unit_net_value']
+        market_value = list(market_series)
+        portfolio_value = list(portfolio_series)
+        temp = list(data['benchmark_portfolio'].index)
+        for i in range(len(temp)):
+            temp[i] = temp[i].strftime("%Y-%m-%d")
+            market_value[i] = market_value[i] -1
+            portfolio_value[i] = portfolio_value[i] - 1
+        xaxis = temp
+        ymin = int(min(min(portfolio_value),min(market_value)) * 100 - 10) /100 
+        ymax = int(max(max(portfolio_value),max(market_value)) * 100 + 10) /100 
+        trade_data = data['trade']
+        del trade_data['commission']
+        del trade_data['exec_id']
+        del trade_data['order_id']
+        del trade_data['order_book_id']
+        del trade_data['tax']
+        trade_data.columns = ['成交价格','成交数量','成交标的','交易方向','side',
+                              '交易日期','交易费用']
+        trade = data['trade'].to_html(classes='table table-hover')
+        trade = trade.replace('dataframe ','')
+        
+        trade = trade.replace('\n','')
+        trade = trade.replace('<th>trade_date</th>','')
+        trade = trade.replace('<th></th>','')
+        trade = trade.replace('<tr></tr>','')
+        trade = trade.replace('<tr style="text-align: right;">','<tr style="text-align: right;"><th>日期</th>')
+        calculator = Cal()
+        alpha = calculator._alpha(portfolio_series,market_series)
+        annualized_returns = calculator._annualized_returns(portfolio_series)
+        benchmark_annualized_returns = calculator._annualized_returns(market_series)
+        benchmark_total_returns = calculator._total_returns(market_series)
+        max_drawdown = calculator._downside_risk(portfolio_series)
+        beta = calculator._beta(portfolio_series,market_series)
+        sharpe = calculator._sharpe(portfolio_series)
+        total_returns = calculator._total_returns(portfolio_series)
+        volatility = calculator._var(portfolio_series)
+        daily_ratio = list(calculator._ratio(portfolio_series))
+        return render(request,'algo/back_test.html',{
+                'xaxis':xaxis,
+                'market_value':market_value,
+                'portfolio_value':portfolio_value,
+                'ymin':ymin,
+                'ymax':ymax,
+                'trade':trade,
+                'daily_ratio':daily_ratio,
+                
+                })
         
 
 

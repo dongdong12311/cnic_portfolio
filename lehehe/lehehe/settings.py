@@ -128,3 +128,5 @@ STATICFILES_DIRS = (  # 自定义静态文件位置
 LOGIN_REDIRECT_URL = '/'
 
 DOCS_ROOT = os.path.join(BASE_DIR, 'templates/docs/build/html')
+
+EXAMPLE_PATH  = os.path.join(BASE_DIR, 'examples')

@@ -1,0 +1,627 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block title %}articles list{% endblock %}
+{% block content %}
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <meta charset="utf-8">
+        <title>结果</title>
+<link rel="stylesheet" href="{% static  "quant_files/css/element.min.css" %}">
+<script src="{% static  "quant_files/echarts.min.js" %}"></script>
+ <script type="text/javascript" src="{% static  "quant_files/js/echarts.js" %}"></script> 
+</head>
+
+
+
+<link href="{% static  "quant_files/algorithm.css" %}"   rel="stylesheet">
+<link href="{% static  "quant_files/backtest.css" %}"   rel="stylesheet">
+		
+
+<style>
+	body.mobile{
+		overflow-x: hidden;
+	}
+
+	#portfolio-perf-label{
+		position:relative;
+	}
+	#portfolio-perf-label .payload{
+		top:10px;
+	}
+	.mobile #live-trading-link{
+		display: none;
+	}
+	.legend-item-radio{
+		margin-left: 10px;
+	}
+	.kk_main.in_wrap{
+		min-width: 970px;
+	}
+	.mobile .kk_main.in_wrap{
+		min-width: 0;
+	}
+	@media(max-width: 1370px){
+		.legend-item[data-key="Benchmark"].powered-by{
+			display: none;
+		}
+	}
+	@media(max-width: 1200px){
+		#portfolio-perf-label .payload{
+			width:230px;
+		}
+		.legend-item-radio{
+			margin-left: 0;
+		}
+		#portfolio-perf-label{
+			padding:5px;
+		}
+	}
+	.kk_body {
+		padding-bottom: 0;
+	}
+	footer {
+		display: none !important;
+	}
+</style>
+
+<style>
+    .kk_body{
+        padding-bottom:0px;
+    }
+</style>
+
+                                                                        <style>
+        span.new{
+        background: rgba(0,0,0,0);
+    }
+    .side-bar .top .name.user-alias img{
+        width:16px;
+        height:16px;
+        float: none;
+        margin-right:0;
+    }
+    .kk_footer .wp20.last img{
+        position: relative;
+        top:-2px;
+    }
+    .kk_footer .wp20.last .item>a{
+        position: relative;
+        left:-5px;
+    }
+    </style>
+
+
+    <body>
+                                <div class="kk_main in_wrap">
+            <div class="kk_body js-jq-body top_50">
+            <div class="backtest-area content content-area old-style padding_b0">
+
+
+
+    <div name="AlgorithmModel">
+        
+        <div id="subnav" class="subnav">
+            <div style="display:inline-block;margin-top: 13px" class="fa-title-box">
+                <span id="title-box">双均线策略</span>
+                            </div>
+            <div class="state-triangle-detail"></div>
+            <div class="state-triangle-detail border"></div>
+
+            <div class="fright algo-btn-groups">
+               <a  href="#" id="algo-button">
+                    编辑策略
+                </a>
+                <a class="no-decoration btn-item active" href="javascript:viod(0)" id="algo-backtest">
+                    回测详情
+                </a>
+               
+                                <a class="no-decoration btn-item" href="#" id="edit-button">
+                    编译运行列表
+                </a>
+                                <a class="no-decoration btn-item" href="#" id="backtest-button">
+                    回测列表
+                </a>
+            </div>
+        </div>
+        
+        <div id="main-pane" class="main-pane">
+            <div id="backtest-settings-outer-container" class="clearfix">
+                <div class="left-container pull-left">
+
+                    <div class="inline-block setting">
+                        <span>设置：</span>
+                        <div id="backtest-settings-summary-payload" class="backtest-settings-summary-payload white-on-tour inline-block">
+                            <span class="date backtest_start_date_display" id="startDate">2017-02-26</span>
+                            <span> 到 </span>
+                            <span class="date backtest_end_date_display" id="endDate">2019-02-26</span>，
+                            <span class="capital backtest_capitalbase_display" id="baseCapital">￥100000</span>，
+                            <span id="backtestCapital" _cash="100000" class="hidden"></span>
+                            <span class="capital backtest_datafrequency_display" id="frequency" value="day">每天</span>
+                        </div>
+                    </div>
+                    <div class="inline-block status">
+    
+                        <div id="done-backtest-pane" class="backtest-done-pane backtest-status-pane inline-block">
+
+                            <span id="backtest-complete">
+                                <span>回测完成</span>
+                                <span id="run-time-cost"> , 耗时13.33s</span>
+                            </span>
+                            <span class="pyVersionTag"> Python2 </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="backtest-toolbar-container pull-right">
+
+  
+		           <div class="btn-group inline-block">
+                        <a href="" class="btn">查看代码</a>
+                    </div>
+                    <div class="btn-group inline-block">
+                                                <a id="backtest-menu-toggle" href="#" data-toggle="dropdown" class="btn dropdown-toggle">导出<span class="caret" style="margin-left:5px"></span></a>
+                                                <ul class="dropdown-menu pull-right" id="backtest-toolbar-dropdown">
+                            <li>
+                                <a id="export-csv-button" href="" data-toggle="modal" download="data.xls">收益概述</a>
+                            </li>
+                            <li>
+                                <a id="export-transaction-button" href="#" class="logdaochu" type="transaction" backtestid="c2410765ade1149656f3c33f948f4561">交易详情</a>
+                            </li>
+                            <li>
+                                <a id="export-position-button" href="#" class="logdaochu" type="position" backtestid="b7cb0d6e505b95d8ed592bc81f469d03">持仓&amp;收益</a>
+                            </li>
+                            <li>
+                                <a id="export-log-button" href="#" class="logdaochu" type="log" backtestid="b0c37fa6a2794e5caeed239ea09490ad">日志</a>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                </div>
+
+            </div>
+            
+            <div id="backtest-results-box" class="algorithm-area">
+            
+                <div id="ide-box" class="box ide mo-box" style="width: auto; ">
+                
+                    <div id="splitter-outer-container">
+                            <div id="splitter-pane" style="width: 1900px;" class="splitter-pane">
+                            
+                                <div  class="dailybars-output height_100pct" style="">
+                                        <div id="myVue">
+
+                                    	<el-tabs type="border-card" tab-position="left" style="">
+                                		<el-tab-pane label="收益概述" >
+                                		 <div class="title" >收益概述</div>
+                                        <div id="headline-results" class="top-level-stats-container white-on-tour">
+                                            <div class="data-group clear">
+                                                <div class="top-level-stat">
+                                                    <div class="stat-label">
+                                                        策略收益
+                                                    </div>
+                                                    <div id="total_returns" class="stat-value ">-5.21%</div>
+                                                </div>
+                                                <div class="top-level-stat backtest-detail__stats-item_long">
+                                                    <div class="stat-label">
+                                                        策略年化收益
+                                                    </div>
+                                                    <div id="year_returns" class="stat-value ">-2.70%</div>
+                                                </div>
+                                                <div class="top-level-stat backtest-detail__stats-item_long">
+                                                    <div class="stat-label">
+                                                        超额收益
+                                                    </div>
+                                                    <div id="excess_return" class="stat-value ">-10.63%</div>
+                                                </div>
+                                                <div class="top-level-stat benchmark-returns">
+                                                    <div class="stat-label">
+                                                        基准收益
+                                                    </div>
+                                                    <div id="benchmark_returns" class="stat-value ">6.07%</div>
+                                                </div>
+                                                <div class="top-level-stat">
+                                                    <div class="stat-label">
+                                                        阿尔法
+                                                    </div>
+                                                    <div id="alpha" class="stat-value">-0.062</div>
+                                                </div>
+                                                <div class="top-level-stat">
+                                                    <div class="stat-label">
+                                                        贝塔
+                                                    </div>
+                                                    <div id="beta" class="stat-value">0.550</div>
+                                                </div>
+                                                <div class="top-level-stat">
+                                                    <div class="stat-label">
+                                                        夏普比率
+                                                    </div>
+                                                    <div id="sharpe" class="stat-value">-0.227</div>
+                                                </div>
+                                                <div class="top-level-stat backtest-detail__stats-item_short">
+                                                    <div class="stat-label">
+                                                        胜率
+                                                    </div>
+                                                    <div id="win_ratio" class="stat-value">0.370</div>
+                                                </div>
+
+                                                <div class="top-level-stat backtest-detail__stats-item_short">
+                                                    <div class="stat-label">
+                                                        盈亏比
+                                                    </div>
+                                                    <div id="profit_loss_ratio" class="stat-value">1.040</div>
+                                                </div>
+                                                <div class="top-level-stat">
+                                                    <div class="stat-label">
+                                                        最大回撤
+                                                    </div>
+                                                    <div id="max_drawdown" class="stat-value">40.47%</div>
+                                                </div>
+                                                <div class="top-level-stat backtest-detail__stats-item_short">
+                                                    <div class="stat-label">
+                                                        索提诺比率
+                                                    </div>
+                                                    <div id="sortino" class="stat-value">-0.316</div>
+                                                </div>
+                                            </div>
+                                            <div class="data-group clear">
+                                                <div class="top-level-stat">
+                                                    <div class="stat-label">
+                                                        日均超额收益
+                                                    </div>
+                                                    <div id="avg_excess_return" class="stat-value">-0.01%</div>
+                                                </div>
+                                                <div class="top-level-stat backtest-detail__stats-item_long">
+                                                    <div class="stat-label">
+                                                        超额收益最大回撤
+                                                    </div>
+                                                    <div id="excess_return_max_drawdown" class="stat-value">23.16%</div>
+                                                </div>
+                                                <div class="top-level-stat backtest-detail__stats-item_long">
+                                                    <div class="stat-label">
+                                                        超额收益夏普比率
+                                                    </div>
+                                                    <div id="excess_return_sharpe" class="stat-value">-0.331</div>
+                                                </div>
+                                                <div class="top-level-stat benchmark-returns">
+                                                    <div class="stat-label">
+                                                        日胜率
+                                                    </div>
+                                                    <div id="day_win_ratio" class="stat-value">0.443</div>
+                                                </div>
+                                                <div class="top-level-stat">
+                                                    <div class="stat-label">
+                                                        盈利次数
+                                                    </div>
+                                                    <div id="win_count" class="stat-value">10</div>
+                                                </div>
+                                                <div class="top-level-stat">
+                                                    <div class="stat-label">
+                                                        亏损次数
+                                                    </div>
+                                                    <div id="lose_count" class="stat-value">17</div>
+                                                </div>
+                                                <div class="top-level-stat">
+                                                    <div class="stat-label">
+                                                        信息比率
+                                                    </div>
+                                                    <div id="information" class="stat-value">-0.199</div>
+                                                </div>
+                                                <div class="top-level-stat backtest-detail__stats-item_short">
+                                                    <div class="stat-label">
+                                                        策略波动率
+                                                    </div>
+                                                    <div id="algorithm_volatility" class="stat-value">0.296</div>
+                                                </div>
+                                                <div class="top-level-stat backtest-detail__stats-item_short">
+                                                    <div class="stat-label">
+                                                        基准波动率
+                                                    </div>
+                                                    <div id="benchmark_volatility" class="stat-value">0.179</div>
+                                                </div>
+                                                <div class="top-level-stat">
+                                                    <div class="stat-label">
+                                                        最大回撤区间
+                                                    </div>
+                                                    <div id="max_drawdown_period" class="stat-value">2018/01/24,2018/10/10</div>
+                                                </div>
+                                                
+                                            </div>
+                                             
+                                            
+                                        </div>
+                                             <div  align="center" id="main2" style="width: 1500px;height:300px;"></div>
+                                             <div  align="center" id="main1" style="width: 1500px;height:300px;"></div>
+
+                                    </el-tab-pane>
+                                		<el-tab-pane label="交易详情">
+                                		<div class="title" >交易详情</div>
+                                		 <div id="headline-results" class="top-level-stats-container white-on-tour">
+                                            <div class="data-group clear">
+                                               
+                                		{% autoescape off %}{{ trade }}{% endautoescape %}
+                                		</div></div>
+                                		</el-tab-pane>
+                                		<el-tab-pane label="每日持仓">角色管理</el-tab-pane>
+                                		<el-tab-pane label="日志输出">定时任务补偿</el-tab-pane>
+                                    	</el-tabs>
+                               
+                                </div>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+</div>
+</div>
+
+        <body>
+    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    
+    <script type="text/javascript">
+
+    </script>
+</body>
+
+
+
+        
+<script type="text/javascript" src="{% static  "quant_files/js/vue.min.js" %}"></script>
+<script src="{% static  "quant_files/js/element.min.js" %}"></script>
+<script type="text/javascript">
+	new Vue({
+		el: '#myVue',
+		data() {
+			return {
+				activeName: 'second',
+				activeName2: 'first',
+				tabPosition: 'left',
+				editableTabsValue2: '2',
+				editableTabs2: [{
+					title: 'Tab 1',
+					name: '1',
+					content: 'Tab 1 content'
+				}, {
+					title: 'Tab 2',
+					name: '2',
+					content: 'Tab 2 content'
+				}],
+				tabIndex: 2
+			}
+		},
+		 mounted(){
+            this.drawLine();
+            this.drawLine2();
+        },
+        
+		methods: {
+    		
+			handleClick(tab, event) {
+				console.log(tab, event);
+			},
+			addTab(targetName) {
+				let newTabName = ++this.tabIndex + '';
+				this.editableTabs2.push({
+					title: 'New Tab',
+					name: newTabName,
+					content: 'New Tab content'
+				});
+				this.editableTabsValue2 = newTabName;
+			},
+			    drawLine(){        // 基于准备好的dom，初始化echarts实例
+                    var myChart = echarts.init(document.getElementById('main1'));
+
+                    var dataAxis = {{xaxis|safe }};
+            var data = {{daily_ratio}};
+            var yMax = 0.1;
+            var dataShadow = [];
+
+for (var i = 0; i < data.length; i++) {
+    dataShadow.push(yMax);
+}
+
+option = {
+    title: {
+        text: '盈亏柱形状图',
+        subtext: 'Feature Sample: Gradient Color, Shadow, Click Zoom',
+        x : 'center',
+    },
+    xAxis: {
+        data: dataAxis,
+        axisLabel: {
+
+            textStyle: {
+
+            }
+        },
+        axisTick: {
+            show: false
+        },
+        axisLine: {
+            show: false
+        },
+        z: 10
+    },
+    yAxis: {
+        axisLine: {
+            show: false
+        },
+        axisTick: {
+            show: false
+        },
+        axisLabel: {
+            textStyle: {
+                color: '#999'
+            }
+        }
+    },
+    dataZoom: [
+        {
+            type: 'inside'
+        }
+    ],
+    series: [
+        { // For shadow
+            type: 'bar',
+            itemStyle: {
+                normal: {color: 'rgba(0,0,0,0.0)'}
+            },
+            barGap:'-100%',
+            barCategoryGap:'40%',
+            data: dataShadow,
+            animation: false
+        },
+        {
+            type: 'bar',
+            itemStyle: {
+                normal: {
+                    color: new echarts.graphic.LinearGradient(
+                        0, 0, 0, 1,
+                        [
+                            {offset: 0, color: '#83bff6'},
+                            {offset: 0.5, color: '#188df0'},
+                            {offset: 1, color: '#188df0'}
+                        ]
+                    )
+                },
+                emphasis: {
+                    color: new echarts.graphic.LinearGradient(
+                        0, 0, 0, 1,
+                        [
+                            {offset: 0, color: '#2378f7'},
+                            {offset: 0.7, color: '#2378f7'},
+                            {offset: 1, color: '#83bff6'}
+                        ]
+                    )
+                }
+            },
+            data: data
+        }
+    ]
+};
+
+// Enable data zoom when user click bar.
+var zoomSize = 6;
+myChart.on('click', function (params) {
+    console.log(dataAxis[Math.max(params.dataIndex - zoomSize / 2, 0)]);
+    myChart.dispatchAction({
+        type: 'dataZoom',
+        startValue: dataAxis[Math.max(params.dataIndex - zoomSize / 2, 0)],
+        endValue: dataAxis[Math.min(params.dataIndex + zoomSize / 2, data.length - 1)]
+    });
+});
+
+
+        myChart.setOption(option);
+        },
+                drawLine2(){        // 基于准备好的dom，初始化echarts实例
+                    var myChart = echarts.init(document.getElementById('main2'));
+
+                    option = {
+                    
+                        title: {
+                                text: '资金曲线',
+                               x : 'center'
+                            },
+                             tooltip: {
+                                trigger: 'axis'
+                            },
+                          grid: {
+                                left: '3%',
+                                right: '4%',
+                                bottom: '3%',
+                                containLabel: true,
+                                show : true,
+                            },
+                        xAxis: {
+                            	type : 'category',
+					        boundaryGap : false,
+                            data:{{xaxis|safe }},
+                            splitLine: {
+                                    interval:5,
+                                    show: true,
+                                    lineStyle:{
+                                         color: ['gray'],
+                                         width: 1,
+                                        type: 'solid'
+                                    }
+                                },
+                            
+
+                        },
+                        toolbox: {
+                                feature: {
+                                    saveAsImage: {}
+                                },
+                                	show : true,
+					        feature : {
+					            mark : {show: true},
+					            dataView : {show: true, readOnly: false},
+					            saveAsImage : {show: true}
+					        }
+                            },
+                       legend: {
+                                data:['投资组合收益率','市场收益率'],
+                                  x : 'left',
+                                  
+                            },
+                        yAxis: {
+                            type: 'value',
+                            min: [{{ymin}}],
+                            max: [{{ymax}}],
+                            splitNumber:15,
+                        },
+                        series: [{
+                            symbol: 'none',
+                            name : '投资组合收益率',
+                            data: {{portfolio_value}},
+                            type: 'line',
+                             color: 'rgb(69, 114, 221)',
+                                        areaStyle: {
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                    offset: 0,
+                    color: 'rgb(187,228,255)'
+                }, {
+                    offset: 1,
+                    color: 'rgb(187,228,255)'
+                }])
+            },
+                        },
+                        {
+                            name : '市场收益率',
+                            data: {{market_value}},
+                            type: 'line',
+                             color: ['red'],
+                              symbol: 'none',
+                        },
+                        ]
+                    };
+
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+                },
+
+		}
+	})
+</script>
+             
+	    
+
+
+
+
+
+
+
+
+
+
+
+</html>
+
+{% endblock %}
