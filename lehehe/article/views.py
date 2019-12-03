@@ -366,14 +366,16 @@ def redit_myalgo(request, article_id):
            "q_matrix"]  
         for dd in list_to_edit:
                 setattr(redit_article,dd,request.POST[dd])
-        try:
-            redit_article.column = request.user.article_column.get(id=request.POST['column_id'])
-            redit_article.algo_column = AlgoColumn.objects.get(id =request.POST['algo_column'])
-            redit_article.save()
-            return HttpResponse("1")
+        '''try:'''
+        redit_article.column = request.user.article_column.get(id=request.POST['column_id'])
+        redit_article.algo_column = AlgoColumn.objects.get(id =request.POST['algo_column'])
+        redit_article.save()
+        return HttpResponse("1")
+        '''
         except Exception as e:
             print(str(e))
             return HttpResponse("2")    
+        '''
         
 
 
