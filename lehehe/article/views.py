@@ -371,7 +371,8 @@ def redit_myalgo(request, article_id):
             redit_article.algo_column = AlgoColumn.objects.get(id =request.POST['algo_column'])
             redit_article.save()
             return HttpResponse("1")
-        except:
+        except Exception as e:
+            print(str(e))
             return HttpResponse("2")    
         
 
