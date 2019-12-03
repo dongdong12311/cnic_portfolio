@@ -2,16 +2,126 @@
 {% load staticfiles %}
 {% block title %}articles list{% endblock %}
 {% block content %}
-<div>
-    <header>
-        <h1>{{ algo.title }}</h1>
-    </header>
-    {% for key in algo.get_attrs_that_is_not_None %}
-        <p>{{key.first}} {{key.second}}</p>
-    {% endfor %}
+
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+
+        
+<link href="{% static  "algo_list/jquery-ui-jq.css" %}" rel="stylesheet">
+<link href="{% static  "quant_files/algorithm.css" %}"   rel="stylesheet"><link href="{% static  "algo_list/newBootstrapDialog.css" %}" rel="stylesheet">
+	
+
+
+
+                                                                        
     
-    <td>
-         <a name="edit" href="{% url 'article:run_test' algo.id %}">模型运行</a>
-    </td>
+    </head>
+    <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Editor</title>
+  <style type="text/css" media="screen">
+    .ace_editor, .toolbar {
+        border: 1px solid lightgray;
+        margin: auto;
+        width: 100%;
+        font-size: 20px;
+    } 
+    .ace_editor {
+        height: 800px;
+    }
+    </style>
+    
+</head>
+
+
+
+
+    <body>
+     <div class="kk_main in_wrap">
+            <div class="kk_body js-jq-body top_50">
+                <div class="content content-area old-style padding_b0">
+    <form name="AlgorithmModel">       
+        <div id="subnav" class="subnav">
+            <div class="pull-right mode-buttons">
+                <div class="mode-container head-con">
+                    <div class="group-btn inline-block">
+                        <div class="btn-group inline-block toggle-buttons" id="algo-toggle-buttons">
+                            <a class=" active no-decoration btn-item" href="#algorithm" id="algo-button">
+                                编辑策略
+                            </a>
+                            <a class="no-decoration btn-item" href="file:///algorithm/backtest/detail?backtestId=0f8d1bc96a27610a3fe2173f0b7371a7" id="algo-backtest">
+                                回测详情
+                            </a>
+                            <span class="line_bg"></span>
+                            <a class=" no-decoration btn-item " href="javascript:void(0);" id="edit-button">
+                                编译运行列表
+                            </a>
+                            <a class="  no-decoration btn-item " href="javascript:void(0);" id="backtest-button">
+                                回测列表
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="main-pane" class="main-pane">
+            <div id="algo-area" class="algorithm-area">
+                <div id="ide-box" class="box ide" style="width: auto; height: 800px;">
+
+                    <div id="splitter-outer-container">
+                        <div id="splitter-container" class="splitter ui-widget ui-widget-content" data-splitter-initialized="true">
+                            <div id="code-area" style="height: 621px; position: absolute; left: 0px; width: 46%; border-right: 1px solid rgb(232, 236, 240); min-width: 400px;" class="splitter-pane ui-resizable ui-resizable-autohide">
+                                <!-- toolbar start -->
+                                
+                                <!-- toolbar endt -->
+
+                                <div id="code-area-internal">
+                                    <pre id="editor">{{algo.algo_code}}</pre>
+                                </div>
+
+                            <div class="ui-resizable-handle ui-resizable-e" style="z-index: 1000; display: none;"></div><div class="ui-resizable-handle ui-resizable-e" style="z-index: 1000; display: none;"></div><div class="ui-resizable-handle ui-resizable-e" style="z-index: 1000; display: none;"></div></div>
+                            <div id="output-pane" style="height:100%; position:absolute;left:46%;width:calc(54% - 10px);margin-left: 10px;" class="splitter-pane">
+
+
+
+                                <div class="dailybars-output height_100pct"> 
+                                    
+                                <div class="dailybars-nav" id="dailybars-nav">
+                                        <a id="full-backtest-button" href="{% url 'article:run_test' algo.id %}">
+                                            <div id="daily-new-backtest-button" href="#join-modal" data-toggle="modal" class=" btn-primary pull-right" data-step="4" data-intro="点击“运行回测”进行完整的回测" data-position="left">
+                                                &nbsp;运行回测
+                                                <i class="icon chevron-right padding_5l"></i>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div>
+                                    {% for key in algo.get_attrs_that_is_not_None %}
+                                        <p>{{key.first}}:{{key.second}}</p>
+                                    {% endfor %}
+                                    </div>
+                                    </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
 </div>
+
+            </div>
+        </div>
+                  
+
+        
+<script src="{% static  "src/ace.js" %}" type="text/javascript" charset="utf-8"></script>
+<script>
+    var editor = ace.edit("editor");
+    editor.session.setMode("ace/mode/python");
+</script>
+
 {% endblock %}

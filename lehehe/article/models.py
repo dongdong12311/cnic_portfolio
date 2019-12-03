@@ -32,6 +32,11 @@ class AlgoColumn(models.Model):
 class ListToDisplay:
     def __init__(self):
         pass
+name_map = {"均值方差模型":"sample_markowitz",
+            "CVaR模型":"sample_hpr",
+            "VaR模型":"sample_cvar",
+            "Bl模型":"sample_bl_model",
+            "Hpr模型":"sample_hpr"}
 
 map_dic = {"title":"模型名称","column":"投资类别",
            "algo_column":"模型类别",
@@ -85,6 +90,8 @@ class MyalgoPost(models.Model):
     # bl_model 的观点矩阵
     p_matrix  = models.TextField(blank=True,)
     q_matrix  = models.TextField(blank=True,)
+    
+    algo_code = models.TextField(blank=True,)
     
     class Meta:
         ordering = ("-updated",)

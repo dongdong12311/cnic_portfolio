@@ -7,7 +7,7 @@
         <tr>
             <td>序号</td>
             <td>标题</td>
-            <td>栏目</td>
+            <td>分类</td>
             <td>操作</td>
         </tr>
         {% for article in articles %}
@@ -17,9 +17,9 @@
             <td>{{ article.column }}</td>
             <td>
                 <a name="edit" href="{% url 'article:redit_article' article.id %}">
-                <span class="glyphicon glyphicon-pencil"></span></a>
+                编辑
                 <a nane="delete" href="javascript:" onclick="del_article(this, {{ article.id }})">
-                <span class="glyphicon glyphicon-trash" style="margin-left:20px;"></span>
+                删除
                 </a>
             </td>
         </tr>

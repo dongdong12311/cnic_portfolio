@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load staticfiles %}
-{% block title %}articles list{% endblock %}
+{% block title %}回测结果{% endblock %}
 {% block content %}
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -10,7 +10,7 @@
 <script src="{% static  "quant_files/echarts.min.js" %}"></script>
  <script type="text/javascript" src="{% static  "quant_files/js/echarts.js" %}"></script> 
 </head>
-
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.css">
 
 
 <link href="{% static  "quant_files/algorithm.css" %}"   rel="stylesheet">
@@ -131,11 +131,10 @@
                     <div class="inline-block setting">
                         <span>设置：</span>
                         <div id="backtest-settings-summary-payload" class="backtest-settings-summary-payload white-on-tour inline-block">
-                            <span class="date backtest_start_date_display" id="startDate">2017-02-26</span>
+                            <span class="date backtest_start_date_display" id="startDate">{{start_date}}</span>
                             <span> 到 </span>
-                            <span class="date backtest_end_date_display" id="endDate">2019-02-26</span>，
-                            <span class="capital backtest_capitalbase_display" id="baseCapital">￥100000</span>，
-                            <span id="backtestCapital" _cash="100000" class="hidden"></span>
+                            <span class="date backtest_end_date_display" id="endDate">{{end_date}}</span>，
+                            <span class="capital backtest_capitalbase_display" id="baseCapital">￥{{initial_capital}}</span>，
                             <span class="capital backtest_datafrequency_display" id="frequency" value="day">每天</span>
                         </div>
                     </div>
@@ -145,9 +144,8 @@
 
                             <span id="backtest-complete">
                                 <span>回测完成</span>
-                                <span id="run-time-cost"> , 耗时13.33s</span>
                             </span>
-                            <span class="pyVersionTag"> Python2 </span>
+                            <span class="pyVersionTag"> Python3 </span>
                         </div>
                     </div>
                 </div>
@@ -184,7 +182,7 @@
                 <div id="ide-box" class="box ide mo-box" style="width: auto; ">
                 
                     <div id="splitter-outer-container">
-                            <div id="splitter-pane" style="width: 1900px;" class="splitter-pane">
+                            <div id="splitter-pane" style="width: 2500px;" class="splitter-pane">
                             
                                 <div  class="dailybars-output height_100pct" style="">
                                         <div id="myVue">
@@ -198,131 +196,94 @@
                                                     <div class="stat-label">
                                                         策略收益
                                                     </div>
-                                                    <div id="total_returns" class="stat-value ">-5.21%</div>
+                                                    <div id="total_returns" class="stat-value ">{{total_returns}}%</div>
                                                 </div>
                                                 <div class="top-level-stat backtest-detail__stats-item_long">
                                                     <div class="stat-label">
                                                         策略年化收益
                                                     </div>
-                                                    <div id="year_returns" class="stat-value ">-2.70%</div>
+                                                    <div id="year_returns" class="stat-value ">{{annualized_returns}}%</div>
+                                                </div>
+                                                                                                <div class="top-level-stat benchmark-returns">
+                                                    <div class="stat-label">
+                                                        基准收益
+                                                    </div>
+                                                    <div id="benchmark_returns" class="stat-value ">{{market_returns}}%</div>
                                                 </div>
                                                 <div class="top-level-stat backtest-detail__stats-item_long">
                                                     <div class="stat-label">
                                                         超额收益
                                                     </div>
-                                                    <div id="excess_return" class="stat-value ">-10.63%</div>
+                                                    <div id="excess_return" class="stat-value ">{{chao_e}}%</div>
                                                 </div>
-                                                <div class="top-level-stat benchmark-returns">
-                                                    <div class="stat-label">
-                                                        基准收益
-                                                    </div>
-                                                    <div id="benchmark_returns" class="stat-value ">6.07%</div>
-                                                </div>
+
                                                 <div class="top-level-stat">
                                                     <div class="stat-label">
                                                         阿尔法
                                                     </div>
-                                                    <div id="alpha" class="stat-value">-0.062</div>
+                                                    <div id="alpha" class="stat-value">{{alpha}}</div>
                                                 </div>
                                                 <div class="top-level-stat">
                                                     <div class="stat-label">
                                                         贝塔
                                                     </div>
-                                                    <div id="beta" class="stat-value">0.550</div>
+                                                    <div id="beta" class="stat-value">{{beta}}</div>
                                                 </div>
                                                 <div class="top-level-stat">
                                                     <div class="stat-label">
                                                         夏普比率
                                                     </div>
-                                                    <div id="sharpe" class="stat-value">-0.227</div>
+                                                    <div id="sharpe" class="stat-value">{{sharpe}}</div>
                                                 </div>
+
+
+                                            </div>
+                                            <div class="data-group clear">
                                                 <div class="top-level-stat backtest-detail__stats-item_short">
                                                     <div class="stat-label">
                                                         胜率
                                                     </div>
-                                                    <div id="win_ratio" class="stat-value">0.370</div>
+                                                    <div id="win_ratio" class="stat-value">--</div>
                                                 </div>
 
                                                 <div class="top-level-stat backtest-detail__stats-item_short">
                                                     <div class="stat-label">
                                                         盈亏比
                                                     </div>
-                                                    <div id="profit_loss_ratio" class="stat-value">1.040</div>
+                                                    <div id="profit_loss_ratio" class="stat-value">--</div>
                                                 </div>
                                                 <div class="top-level-stat">
                                                     <div class="stat-label">
                                                         最大回撤
                                                     </div>
-                                                    <div id="max_drawdown" class="stat-value">40.47%</div>
-                                                </div>
-                                                <div class="top-level-stat backtest-detail__stats-item_short">
-                                                    <div class="stat-label">
-                                                        索提诺比率
-                                                    </div>
-                                                    <div id="sortino" class="stat-value">-0.316</div>
-                                                </div>
-                                            </div>
-                                            <div class="data-group clear">
-                                                <div class="top-level-stat">
-                                                    <div class="stat-label">
-                                                        日均超额收益
-                                                    </div>
-                                                    <div id="avg_excess_return" class="stat-value">-0.01%</div>
-                                                </div>
-                                                <div class="top-level-stat backtest-detail__stats-item_long">
-                                                    <div class="stat-label">
-                                                        超额收益最大回撤
-                                                    </div>
-                                                    <div id="excess_return_max_drawdown" class="stat-value">23.16%</div>
-                                                </div>
-                                                <div class="top-level-stat backtest-detail__stats-item_long">
-                                                    <div class="stat-label">
-                                                        超额收益夏普比率
-                                                    </div>
-                                                    <div id="excess_return_sharpe" class="stat-value">-0.331</div>
-                                                </div>
-                                                <div class="top-level-stat benchmark-returns">
-                                                    <div class="stat-label">
-                                                        日胜率
-                                                    </div>
-                                                    <div id="day_win_ratio" class="stat-value">0.443</div>
+                                                    <div id="max_drawdown" class="stat-value">{{max_drawdown}}%</div>
                                                 </div>
                                                 <div class="top-level-stat">
                                                     <div class="stat-label">
                                                         盈利次数
                                                     </div>
-                                                    <div id="win_count" class="stat-value">10</div>
+                                                    <div id="win_count" class="stat-value">--</div>
                                                 </div>
                                                 <div class="top-level-stat">
                                                     <div class="stat-label">
                                                         亏损次数
                                                     </div>
-                                                    <div id="lose_count" class="stat-value">17</div>
+                                                    <div id="lose_count" class="stat-value">--</div>
                                                 </div>
-                                                <div class="top-level-stat">
-                                                    <div class="stat-label">
-                                                        信息比率
-                                                    </div>
-                                                    <div id="information" class="stat-value">-0.199</div>
-                                                </div>
+
                                                 <div class="top-level-stat backtest-detail__stats-item_short">
                                                     <div class="stat-label">
                                                         策略波动率
                                                     </div>
-                                                    <div id="algorithm_volatility" class="stat-value">0.296</div>
+                                                    <div id="algorithm_volatility" class="stat-value">{{volatility}}</div>
                                                 </div>
                                                 <div class="top-level-stat backtest-detail__stats-item_short">
                                                     <div class="stat-label">
                                                         基准波动率
                                                     </div>
-                                                    <div id="benchmark_volatility" class="stat-value">0.179</div>
+                                                    <div id="benchmark_volatility" class="stat-value">{{market_volatility}}</div>
                                                 </div>
-                                                <div class="top-level-stat">
-                                                    <div class="stat-label">
-                                                        最大回撤区间
-                                                    </div>
-                                                    <div id="max_drawdown_period" class="stat-value">2018/01/24,2018/10/10</div>
-                                                </div>
+             
                                                 
                                             </div>
                                              
@@ -340,8 +301,14 @@
                                 		{% autoescape off %}{{ trade }}{% endautoescape %}
                                 		</div></div>
                                 		</el-tab-pane>
-                                		<el-tab-pane label="每日持仓">角色管理</el-tab-pane>
-                                		<el-tab-pane label="日志输出">定时任务补偿</el-tab-pane>
+                                		<el-tab-pane label="每日持仓">
+                                		<div class="title" >每日持仓</div>                                		 
+                                		<div id="headline-results" class="top-level-stats-container white-on-tour">
+                                            <div class="data-group clear">
+                                               
+                                		{% autoescape off %}{{ trade2 }}{% endautoescape %}
+                                		</div></div></el-tab-pane>
+                                		<el-tab-pane label="日志输出"></el-tab-pane>
                                     	</el-tabs>
                                
                                 </div>
@@ -358,17 +325,6 @@
 
 </div>
 </div>
-
-        <body>
-    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
-    
-    <script type="text/javascript">
-
-    </script>
-</body>
-
-
-
         
 <script type="text/javascript" src="{% static  "quant_files/js/vue.min.js" %}"></script>
 <script src="{% static  "quant_files/js/element.min.js" %}"></script>
@@ -430,6 +386,16 @@ option = {
         subtext: 'Feature Sample: Gradient Color, Shadow, Click Zoom',
         x : 'center',
     },
+                                 tooltip: {
+                                trigger: 'axis'
+                            },
+                          grid: {
+                                left: '3%',
+                                right: '4%',
+                                bottom: '3%',
+                                containLabel: true,
+                                show : true,
+                            },
     xAxis: {
         data: dataAxis,
         axisLabel: {
@@ -611,7 +577,6 @@ myChart.on('click', function (params) {
 </script>
              
 	    
-
 
 
 

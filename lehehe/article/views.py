@@ -172,7 +172,7 @@ def date_to_int(date):
     return date.year * 10000 + date.month * 100 + date.day
         
         
-        
+from .models import name_map
 def ParseMyalgoPost(algo):
     name_map = {"均值方差模型":"sample_markowitz",
             "CVaR模型":"sample_hpr",
@@ -225,7 +225,10 @@ def run_test(request,article_id):
         algo = MyalgoPost.objects.get(id=article_id)
         config = ParseMyalgoPost(algo)
         stragety = __import__(config['stragety'])
-        res = Run_func(stragety.initialize,stragety.handle_data,config)
+        try:
+            res = Run_func(stragety.initialize,stragety.handle_data,config)
+        except Exception as  e:
+            return HttpResponse(str(e))
         data = res['sys_analyser']
         portfolio_series = data['portfolio']['unit_net_value']
         market_series = data['benchmark_portfolio']['unit_net_value']
@@ -249,37 +252,48 @@ def run_test(request,article_id):
                               '交易日期','交易费用']
         trade = data['trade'].to_html(classes='table table-hover')
         trade = trade.replace('dataframe ','')
-        
+        trade = trade.replace('border="1"','border="1" id ="tradetable1" data-pagination="true" ')
         trade = trade.replace('\n','')
         trade = trade.replace('<th>trade_date</th>','')
         trade = trade.replace('<th></th>','')
         trade = trade.replace('<tr></tr>','')
         trade = trade.replace('<tr style="text-align: right;">','<tr style="text-align: right;"><th>日期</th>')
+        
+        trade_info = data['stock_positions']
+        del trade_info['order_book_id']
+        trade_info.columns = ['持仓成本','最新价格','总市值','持仓数量','交易标的',
+                              ]
+
+        trade2 = trade_info.to_html(classes='table table-hover')
+        trade2 = trade2.replace('\n','')
+        trade2 = trade2.replace('<th>trade_date</th>','')
+        trade2 = trade2.replace('<th></th>','')
+        trade2 = trade2.replace('<tr></tr>','')
+        trade2 = trade2.replace('<tr style="text-align: right;">','<tr style="text-align: right;"><th>日期</th>')
+
         calculator = Cal()
-        alpha = calculator._alpha(portfolio_series,market_series)
-        annualized_returns = calculator._annualized_returns(portfolio_series)
+        alpha =  round(calculator._alpha(portfolio_series,market_series),2)
+        annualized_returns = round(100*calculator._annualized_returns(portfolio_series),2)
         benchmark_annualized_returns = calculator._annualized_returns(market_series)
         benchmark_total_returns = calculator._total_returns(market_series)
-        max_drawdown = calculator._downside_risk(portfolio_series)
-        beta = calculator._beta(portfolio_series,market_series)
-        sharpe = calculator._sharpe(portfolio_series)
-        total_returns = calculator._total_returns(portfolio_series)
-        volatility = calculator._var(portfolio_series)
+        max_drawdown = round(100*calculator._downside_risk(portfolio_series),2)
+        beta = round(calculator._beta(portfolio_series,market_series),2)
+        sharpe = round(calculator._sharpe(portfolio_series),2)
+        total_returns = round(100*calculator._total_returns(portfolio_series),2)
+        market_returns = round(100*calculator._total_returns(market_series),2)
+        chao_e  = total_returns - market_returns
+        volatility = round(calculator._var(portfolio_series),2)
+        market_volatility = round(calculator._var(market_series),2)
         daily_ratio = list(calculator._ratio(portfolio_series))
-        return render(request,'algo/back_test.html',{
-                'xaxis':xaxis,
-                'market_value':market_value,
-                'portfolio_value':portfolio_value,
-                'ymin':ymin,
-                'ymax':ymax,
-                'trade':trade,
-                'daily_ratio':daily_ratio,
-                
-                })
+        start_date = temp[0]
+        end_date = temp[-1]
+        initial_capital = config['initial_capital']
+        return render(request,'algo/back_test.html',locals())
         
 
-
+import os
 from .forms import MyalgoPostPostForm
+from .models import name_map
 @login_required(login_url='/account/login')
 @csrf_exempt
 def myalgo_post(request):
@@ -293,6 +307,16 @@ def myalgo_post(request):
                 new_algo.author = request.user
                 new_algo.column = request.user.article_column.get(id=request.POST['column_id'])
                 new_algo.algo_column = AlgoColumn.objects.get(id=request.POST['algo_column'])
+
+                try:
+                    name = name_map[new_algo.algo_column.column] + ".py"
+                    with open(os.path.join(settings.EXAMPLE_PATH,name)) as f:
+                        codes = f.readlines()
+                        for code in codes:
+                            new_algo.algo_code += code           
+                except Exception as e:
+                    pass
+                    
                 new_algo.save()
                 return HttpResponse("1")
             except:
