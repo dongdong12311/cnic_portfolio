@@ -4,8 +4,11 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from .models import ArticleColumn,AlgorithmPost,MyalgoPost,AlgoColumn
 from .forms import ArticleColumnForm,ArticlePostForm
-
+import os
+from .forms import MyalgoPostPostForm
+from .models import name_map
 from django.views.decorators.http import require_POST  
+import json  
 @login_required(login_url='/account/login/')
 @csrf_exempt
 def article_column(request):
@@ -109,7 +112,10 @@ def myalgo_list(request):
 @login_required(login_url='/account/login')
 def myalgo_detail(request, id, slug):
     algo = get_object_or_404(MyalgoPost, id=id, slug=slug)
-    return render(request, "algo/column/algo_detail.html", {"algo": algo})
+
+    algo_json = json.dumps(ParseMyalgoPost(algo))
+
+    return render(request, "algo/column/algo_detail.html", {"algo": algo,"algo_json":algo_json})
 
 
 
@@ -171,8 +177,7 @@ def redit_article(request, article_id):
 def date_to_int(date):
     return date.year * 10000 + date.month * 100 + date.day
         
-        
-from .models import name_map
+
 def ParseMyalgoPost(algo):
     name_map = {"均值方差模型":"sample_markowitz",
             "CVaR模型":"sample_hpr",
@@ -187,37 +192,36 @@ def ParseMyalgoPost(algo):
     cov_method  = algo.cov_method
     balanced_dates = int(algo.balanced_dates)
     benchmark = algo.benchmark
-    
+    opt_criterion = algo.opt_criterion
+    stocks = json.loads(algo.portfolio)
     res = {"stragety": name_map[name], "start": date_to_int(algo.start_date), 
      "end": date_to_int(algo.end_date), "initial_capital": initial_capital, 
      "benchmark": benchmark, 
      "balanced_dates": {"method": "equal_difference", "param": balanced_dates},
-     "stocks": ["000001.SZ", "000002.SZ", "000004.SZ", "000005.SZ", 
-                "000006.SZ", "000007.SZ", "000008.SZ", "000009.SZ", "000010.SZ"], 
+     "stocks": stocks, 
                 "expected_return_days": expected_return_days,
-                "cov_method": "sample", 
-                "opt_criterion": "max_sharpe",
+                "cov_method": cov_method, 
+                "opt_criterion": opt_criterion,
                 "cleaned_weights": True, 
                 "target_return": target_return, 
                 "target_risk": target_risk, 
                 "risk_free_rate": 0.02, 
                 "opt_param": {}
             }
-
+    
 
     return res
        
         
         
-import json
+
 import sys
 from django.conf import settings
-import pandas as pd
+
 sys.path.append(settings.EXAMPLE_PATH)
 from trading_system.engine import Run_func
-from trading_system.plot.plot import plot_result
-from trading_system.generate_parameter import generate,print_tree,generate_all_param
 from trading_system.portfolio.summarise import Cal
+
 @login_required(login_url='/account/login')
 @csrf_exempt
 def run_test(request,article_id):
@@ -290,10 +294,18 @@ def run_test(request,article_id):
         initial_capital = config['initial_capital']
         return render(request,'algo/back_test.html',locals())
         
+def load_code(algo_column):
+    name = name_map[algo_column] + ".py"
+    res = ""
+    try:     
+        with open(os.path.join(settings.EXAMPLE_PATH,name)) as f:
+            codes = f.readlines()
+            for code in codes:
+                res += code   
+    except:
+        pass
+    return res
 
-import os
-from .forms import MyalgoPostPostForm
-from .models import name_map
 @login_required(login_url='/account/login')
 @csrf_exempt
 def myalgo_post(request):
@@ -307,16 +319,7 @@ def myalgo_post(request):
                 new_algo.author = request.user
                 new_algo.column = request.user.article_column.get(id=request.POST['column_id'])
                 new_algo.algo_column = AlgoColumn.objects.get(id=request.POST['algo_column'])
-
-                try:
-                    name = name_map[new_algo.algo_column.column] + ".py"
-                    with open(os.path.join(settings.EXAMPLE_PATH,name)) as f:
-                        codes = f.readlines()
-                        for code in codes:
-                            new_algo.algo_code += code           
-                except Exception as e:
-                    pass
-                    
+                new_algo.algo_code = load_code(new_algo.algo_column.column)    
                 new_algo.save()
                 return HttpResponse("1")
             except:
@@ -366,16 +369,16 @@ def redit_myalgo(request, article_id):
            "q_matrix"]  
         for dd in list_to_edit:
                 setattr(redit_article,dd,request.POST[dd])
-        '''try:'''
-        redit_article.column = request.user.article_column.get(id=request.POST['column_id'])
-        redit_article.algo_column = AlgoColumn.objects.get(id =request.POST['algo_column'])
-        redit_article.save()
-        return HttpResponse("1")
-        '''
-        except Exception as e:
-            print(str(e))
+        try:
+            redit_article.column = request.user.article_column.get(id=request.POST['column_id'])
+            redit_article.algo_column = AlgoColumn.objects.get(id =request.POST['algo_column'])
+            redit_article.algo_code = load_code(redit_article.algo_column.column) 
+            redit_article.save()
+            return HttpResponse("1")
+
+        except :
             return HttpResponse("2")    
-        '''
+
         
 
 
@@ -384,7 +387,7 @@ def redit_myalgo(request, article_id):
 
 
 
-from django.shortcuts import render_to_response
+
  
 # 表单
 @login_required(login_url='/account/login')

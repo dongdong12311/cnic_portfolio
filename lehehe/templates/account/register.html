@@ -93,13 +93,17 @@
                             <label for="{{ form.email.id_for_label }}" class="label">电子邮件</label>
                             {{ form.email }}
                         </div>
+                         <div class="group">
+                            <input id="check" type="checkbox" class="check" checked>
+                            <label for="check">
+                                <a href="#">已有帐号，立刻登录?</a></label> 
+                        </div>
                         <div class="group">
-                            <input type="submit" class="button" value="注册">
+                            <input type="submit" class="button" value="注册" style="color: #fff;">
                         </div>
+                        
                         <div class="hr"></div>
-                        <div class="foot-lnk">
-                            <label for="tab-1">Already Member? </label>
-                        </div>
+
                     </form>
                 </div>
                 <!-- //signin form -->

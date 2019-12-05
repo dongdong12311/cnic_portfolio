@@ -316,7 +316,7 @@ a {
 
 .login-wrap {
     margin: auto;
-    max-width: 525px;
+    max-width: 550px;
     min-height: 725px;
     position: relative;
     background: url(../images/banner.jpg) no-repeat center;
@@ -392,12 +392,12 @@ a {
 .login-form .group .input,
 .login-form .group .button {
     border: none;
-    border-bottom: 1px solid #1fcdb4;
+    border-bottom: 1px solid #f7f7f7;
     padding: 15px 20px;
     border-radius: 25px;
-    background: rgba(255, 255, 255, 0.54);
+    background: rgba(159, 213, 234, 0.54);
     letter-spacing: 1px;
-    font-size: 1em;
+    font-size: 1.3em;
     color: #000;
     outline: none;
 }
@@ -415,7 +415,7 @@ a {
 }
 
 .login-form .group .button {
-    background: #1fcdb4;
+    background: #6397fb;
 }
 
 .login-form .group label .icon {

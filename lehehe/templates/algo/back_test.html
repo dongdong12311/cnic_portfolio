@@ -9,13 +9,9 @@
 <link rel="stylesheet" href="{% static  "quant_files/css/element.min.css" %}">
 <script src="{% static  "quant_files/echarts.min.js" %}"></script>
  <script type="text/javascript" src="{% static  "quant_files/js/echarts.js" %}"></script> 
-</head>
-<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.css">
-
-
 <link href="{% static  "quant_files/algorithm.css" %}"   rel="stylesheet">
 <link href="{% static  "quant_files/backtest.css" %}"   rel="stylesheet">
-		
+</head>		
 
 <style>
 	body.mobile{
@@ -70,7 +66,7 @@
     }
 </style>
 
-                                                                        <style>
+ <style>
         span.new{
         background: rgba(0,0,0,0);
     }
@@ -102,23 +98,19 @@
         
         <div id="subnav" class="subnav">
             <div style="display:inline-block;margin-top: 13px" class="fa-title-box">
-                <span id="title-box">双均线策略</span>
+                <span id="title-box">{{algo.title}}</span>
                             </div>
             <div class="state-triangle-detail"></div>
             <div class="state-triangle-detail border"></div>
 
             <div class="fright algo-btn-groups">
-               <a  href="#" id="algo-button">
+               <a  href="{{ algo.get_absolute_url }}" id="algo-button">
                     编辑策略
                 </a>
                 <a class="no-decoration btn-item active" href="javascript:viod(0)" id="algo-backtest">
                     回测详情
                 </a>
-               
-                                <a class="no-decoration btn-item" href="#" id="edit-button">
-                    编译运行列表
-                </a>
-                                <a class="no-decoration btn-item" href="#" id="backtest-button">
+                  <a class="no-decoration btn-item" href="#" id="backtest-button">
                     回测列表
                 </a>
             </div>

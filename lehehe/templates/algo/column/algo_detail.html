@@ -2,14 +2,24 @@
 {% load staticfiles %}
 {% block title %}articles list{% endblock %}
 {% block content %}
+<head>
+<script src="{% static  "src/ace.js" %}" type="text/javascript" charset="utf-8"></script>
 
+
+
+  <link href="{% static  "jsoneditor/dist/jsoneditor.css" %}" rel="stylesheet" type="text/css">
+  <script src="{% static  "jsoneditor/dist/jsoneditor-minimalist.js" %}"></script>
+
+
+</head>
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 
 
         
 <link href="{% static  "algo_list/jquery-ui-jq.css" %}" rel="stylesheet">
-<link href="{% static  "quant_files/algorithm.css" %}"   rel="stylesheet"><link href="{% static  "algo_list/newBootstrapDialog.css" %}" rel="stylesheet">
+<link href="{% static  "quant_files/algorithm.css" %}"   rel="stylesheet">
+<link href="{% static  "algo_list/newBootstrapDialog.css" %}" rel="stylesheet">
 	
 
 
@@ -19,20 +29,20 @@
     </head>
     <head>
   <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <title>Editor</title>
   <style type="text/css" media="screen">
     .ace_editor, .toolbar {
         border: 1px solid lightgray;
         margin: auto;
         width: 100%;
-        font-size: 20px;
+        font-size: 17px;
     } 
+    
     .ace_editor {
         height: 800px;
     }
     </style>
-    
+
 </head>
 
 
@@ -43,24 +53,29 @@
             <div class="kk_body js-jq-body top_50">
                 <div class="content content-area old-style padding_b0">
     <form name="AlgorithmModel">       
-        <div id="subnav" class="subnav">
+        <div id="subnav" class="subnav">  
+                              
+         <h2 class="algo-title" >   {{algo.title}}  模型代码 & 配置文件</h2>
+                                                                
             <div class="pull-right mode-buttons">
                 <div class="mode-container head-con">
-                    <div class="group-btn inline-block">
+
+                    <div class="group-btn inline-block">                          
+
                         <div class="btn-group inline-block toggle-buttons" id="algo-toggle-buttons">
+
                             <a class=" active no-decoration btn-item" href="#algorithm" id="algo-button">
                                 编辑策略
                             </a>
-                            <a class="no-decoration btn-item" href="file:///algorithm/backtest/detail?backtestId=0f8d1bc96a27610a3fe2173f0b7371a7" id="algo-backtest">
+                            <a class="no-decoration btn-item" href="javascript:viod(0)" id="algo-backtest">
                                 回测详情
                             </a>
-                            <span class="line_bg"></span>
-                            <a class=" no-decoration btn-item " href="javascript:void(0);" id="edit-button">
-                                编译运行列表
+               
+                            <a href="{% url 'article:run_test' algo.id %}" id="backtest-button">
+                                运行模型
                             </a>
-                            <a class="  no-decoration btn-item " href="javascript:void(0);" id="backtest-button">
-                                回测列表
-                            </a>
+
+
                         </div>
                     </div>
                 </div>
@@ -86,23 +101,29 @@
 
 
 
-                                <div class="dailybars-output height_100pct"> 
-                                    
-                                <div class="dailybars-nav" id="dailybars-nav">
-                                        <a id="full-backtest-button" href="{% url 'article:run_test' algo.id %}">
-                                            <div id="daily-new-backtest-button" href="#join-modal" data-toggle="modal" class=" btn-primary pull-right" data-step="4" data-intro="点击“运行回测”进行完整的回测" data-position="left">
-                                                &nbsp;运行回测
-                                                <i class="icon chevron-right padding_5l"></i>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div>
-                                    {% for key in algo.get_attrs_that_is_not_None %}
-                                        <p>{{key.first}}:{{key.second}}</p>
-                                    {% endfor %}
-                                    </div>
-                                    </div>
+  <style type="text/css">
+    #jsoneditor {
+      width: 960px;
+      height: 800px;
+      
+    }
 
+
+    p, li {
+      width: 500px;
+      font-size: 17px;
+    }
+
+    code {
+      background: #f5f5f5;
+      font-size: 20px;
+      
+    }
+
+  </style>
+  <div id="jsoneditor"></div>
+                                    </div>
+                                    
 
                             </div>
                         </div>
@@ -116,12 +137,62 @@
             </div>
         </div>
                   
-
-        
-<script src="{% static  "src/ace.js" %}" type="text/javascript" charset="utf-8"></script>
+<div id="dataid" d="" style="display:none">{{algo_json}}</div> 
 <script>
+  const container = document.getElementById('jsoneditor');
+  const options = {
+    modes: ['text', 'code', 'tree', 'form', 'view'],
+    mode: 'code',
+    ace: ace,
+    theme :"li"
+  };
+    
+    var json1 =  document.getElementById('dataid').innerHTML;
+    const json = JSON.parse(json1); 
+    const editor1 = new JSONEditor(container, {}, json)
+</script>      
+  
+<script>
+     var buildDom = require("ace/lib/dom").buildDom;
     var editor = ace.edit("editor");
     editor.session.setMode("ace/mode/python");
+        var refs = {};
+    function updateToolbar() {
+        refs.saveButton.disabled = editor.session.getUndoManager().isClean();
+        refs.undoButton.disabled = !editor.session.getUndoManager().hasUndo();
+        refs.redoButton.disabled = !editor.session.getUndoManager().hasRedo();
+    }
+    editor.on("input", updateToolbar);
+    function save() {
+        localStorage.savedValue = editor.getValue(); 
+        editor.session.getUndoManager().markClean();
+        updateToolbar();
+    }
+    editor.commands.addCommand({
+        name: "保存",
+        exec: save,
+        bindKey: { win: "ctrl-s", mac: "cmd-s" }
+    });
+    
+    buildDom(["div", { class: "toolbar" },
+        ["button", {
+            ref: "saveButton",
+            onclick: save
+        }, "保存"],
+        ["button", {
+            ref: "undoButton",
+            onclick: function() {
+                editor.undo();
+            }
+        }, "撤销"],
+        ["button", {
+            ref: "redoButton",
+            onclick: function() {
+                editor.redo();
+            }
+        }, "恢复"],
+    ], document.getElementById("code-area-internal"), refs);
+    document.getElementById("code-area-internal").appendChild(editor.container)
 </script>
 
 {% endblock %}
