@@ -3,17 +3,14 @@
         <meta charset="utf-8">
         
 
-<link type="text/css" href="{% static  "quant_files/common.css" %}" rel="stylesheet">
-<link rel="stylesheet" href="{% static  "quant_files/jq-common.css" %}">
 
 
 
 
 
-	<link rel="stylesheet" href="{% static "css/style.css" %}"/>
     
-        <header id="kk_nav" >
-		<div class="header-section clearfix">
+	<header class="header-section clearfix">
+		<div class="container-fluid">
 			<a href="/" class="site-logo">
 				<!--img src="{% static "img/logo.jpg" %}" alt=""-->
 			</a>
@@ -21,12 +18,9 @@
 			<a href="" class="user"><i class="fa fa-user"></i></a>
 			<nav class="main-menu">
 				<ul class="menu-list">
-                <li><a href="/">主页</a></li>
-                <li><a href="{% url 'article:myalgo_list' %}">我的模型</a></li>
-                <li><a href="{% url 'article:myalgo_post' %}">模型设计</a></li>
-                <li><a href="{% url 'article:article_list' %}">参数优化</a></li>
+                <li><a href="{% url 'article:myalgo_list' %}">平台介绍</a></li>
+                <li><a href="{% url 'article:myalgo_list' %}">新手指引</a></li>
 				<li><a href="{% static "docs/index.html" %}"/>API文档</a></li>
-                <li><a href="{% url 'account:my_home_page' %}">个人信息</a></li>
                 {% if user.is_authenticated %}
                 <li><a href="{% url 'account:user_logout' %}">退出登录</a></li>
                 <li>           </li>
@@ -37,7 +31,7 @@
 				</ul>
 			</nav>
 		</div>
-    </header>
+	</header>
 
 <div class="container">
 	

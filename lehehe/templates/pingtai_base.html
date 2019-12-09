@@ -1,0 +1,161 @@
+{% load staticfiles %}
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>{% block title %}{% endblock %}</title>
+     <link href="{% static  "kuangjia/assets/plugins/bootstrap/css/bootstrap.min.css" %}"  rel="stylesheet">
+    <!-- Custom CSS -->
+     <link href="{% static  "kuangjia/css/style.css" %}"  rel="stylesheet">
+    <!-- You can change the theme colors from here -->
+     <link href="{% static  "kuangjia/css/colors/blue.css" %}"  id="theme" rel="stylesheet">
+    
+</head>
+
+<style>
+.sidebar-nav ul li a {
+    color: #3679c3;
+    font-size: 20px;
+}
+.fix-header .topbar {
+    position: fixed;
+    width: 100%;
+    height: 80;
+
+}
+</style>
+<body class="fix-header fix-sidebar card-no-border">
+
+<div id="main-wrapper">
+    <header class="topbar">
+            <nav class="navbar top-navbar navbar-toggleable-sm navbar-light">
+                <!-- ============================================================== -->
+                <!-- Logo -->
+                <!-- ============================================================== -->
+                <div class="navbar-header">
+                    
+                        <!-- Logo icon -->
+
+                        <!--End Logo icon -->
+                        <!-- Logo text -->
+                        
+                            <!-- dark Logo text -->
+                            <img src="{% static  "kuangjia/assets/images/logo.png" %}" style=  "width:250px"  alt="homepage" class="dark-logo" />
+                       
+                   
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Logo -->
+                <!-- ============================================================== -->
+                <div class="navbar-collapse">
+                    <!-- ============================================================== -->
+                    <!-- toggle and nav items -->
+                    <!-- ============================================================== -->
+                    <ul class="navbar-nav mr-auto mt-md-0 ">
+      
+						<li class="nav-item dropdown">
+							  <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark" href="/"    aria-expanded="false">
+									主页</a>
+						 </li>				
+	
+                    </ul>
+                    <!-- ============================================================== -->
+                    <!-- User profile and search -->
+                    <!-- ============================================================== -->
+                    <ul class="navbar-nav my-lg-0">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="{% url 'account:my_information' %}" >
+							 欢迎您！ {{user.username}}  个人信息</a>
+                        </li>
+                           <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="{% url 'account:user_logout' %}">
+							  登出</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+    
+        <aside class="left-sidebar">
+            <!-- Sidebar scroll-->
+            <div class="scroll-sidebar">
+                <!-- Sidebar navigation-->
+                <nav class="sidebar-nav">
+                    <ul id="sidebarnav">
+                        <li>
+                            <a href="{% url 'article:myalgo_list' %}" class="waves-effect"><i class="fa fa-clock-o m-r-10" aria-hidden="true"></i>我的模型</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'article:myalgo_post' %}" class="waves-effect"><i class="fa fa-user m-r-10" aria-hidden="true"></i>模型设计</a>
+                        </li>
+
+                        <li>
+                            <a href="{% url 'article:myalgo_list_to_edit' %}" class="waves-effect"><i class="fa fa-font m-r-10" aria-hidden="true"></i>模型编程</a>
+                        </li>
+                        <li>
+                            <a href="{% static "docs/index.html" %}" class="waves-effect"><i class="fa fa-globe m-r-10" aria-hidden="true"></i>平台文档</a>
+                        </li>
+                         <li>
+                            <a href="#" class="waves-effect"><i class="fa fa-font m-r-10" aria-hidden="true"></i>结果分析</a>
+                        </li>
+
+
+                    </ul>
+   
+                </nav>
+                <!-- End Sidebar navigation -->
+            </div>
+            <!-- End Sidebar scroll-->
+        </aside>
+        <div class="page-wrapper">
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+                         <div class="row page-titles">
+                    <div class="col-md-6 col-8 align-self-center">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{% url 'article:myalgo_list' %}" >主页</a></li>
+                            <li class="breadcrumb-item active">{% block title2 %}{% endblock %}</li>
+                        </ol>
+                    </div>
+                </div>
+                    {% block content %} {% endblock %}
+            </div>
+        </div>
+</div>
+{% block javascript %} 
+<!-- All Jquery -->
+<!-- ============================================================== -->
+<script src="{% static "kuangjia/assets/plugins/jquery/jquery.min.js" %}"></script>
+<!-- Bootstrap tether Core JavaScript -->
+<script src="{% static "kuangjia/assets/plugins/bootstrap/js/tether.min.js" %}"></script>
+<script src="{% static "kuangjia/assets/plugins/bootstrap/js/bootstrap.min.js" %}"></script>
+<!-- slimscrollbar scrollbar JavaScript -->
+<script src="{% static "kuangjia/js/jquery.slimscroll.js" %}"></script>
+<!--Wave Effects -->
+<script src="{% static "kuangjia/js/waves.js" %}"></script>
+<!--Menu sidebar -->
+<script src="{% static "kuangjia/js/sidebarmenu.js" %}"></script>
+<!--stickey kit -->
+<script src="{% static "kuangjia/assets/plugins/sticky-kit-master/dist/sticky-kit.min.js" %}"></script>
+<!--Custom JavaScript -->
+<script src="{% static "kuangjia/js/custom.min.js" %}"></script>
+<!-- ============================================================== -->
+<!-- This page plugins -->
+<!-- ============================================================== -->
+<!-- Flot Charts JavaScript -->
+<script src="{% static "kuangjia/assets/plugins/flot/jquery.flot.js" %}"></script>
+<script src="{% static "kuangjia/assets/plugins/flot.tooltip/js/jquery.flot.tooltip.min.js" %}"></script>
+<script src="{% static "kuangjia/js/flot-data.js" %}"></script>
+<!-- ============================================================== -->
+<!-- Style switcher -->
+<!-- ============================================================== -->
+<script src="{% static "kuangjia/assets/plugins/styleswitcher/jQuery.style.switcher.js" %}"></script>
+{% endblock %}
+</body>
+</html>

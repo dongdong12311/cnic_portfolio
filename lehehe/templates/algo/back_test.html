@@ -1,6 +1,7 @@
-{% extends "base.html" %}
+{% extends "pingtai_base.html" %}
 {% load staticfiles %}
 {% block title %}回测结果{% endblock %}
+{% block title2 %}回测结果{% endblock %}
 {% block content %}
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -100,20 +101,7 @@
             <div style="display:inline-block;margin-top: 13px" class="fa-title-box">
                 <span id="title-box">{{algo.title}}</span>
                             </div>
-            <div class="state-triangle-detail"></div>
-            <div class="state-triangle-detail border"></div>
 
-            <div class="fright algo-btn-groups">
-               <a  href="{{ algo.get_absolute_url }}" id="algo-button">
-                    编辑策略
-                </a>
-                <a class="no-decoration btn-item active" href="javascript:viod(0)" id="algo-backtest">
-                    回测详情
-                </a>
-                  <a class="no-decoration btn-item" href="#" id="backtest-button">
-                    回测列表
-                </a>
-            </div>
         </div>
         
         <div id="main-pane" class="main-pane">

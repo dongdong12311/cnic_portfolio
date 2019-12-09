@@ -40,7 +40,9 @@ def myalgo_column(request):
             return HttpResponse('2')
         else:
             ArticleColumn.objects.create(user=request.user, column=column_name)
-            return HttpResponse("1")        
+            return HttpResponse("1")  
+
+
 @login_required(login_url='/account/login')
 @require_POST
 @csrf_exempt
@@ -108,7 +110,11 @@ def article_detail(request, id, slug):
 def myalgo_list(request):
     algos = MyalgoPost.objects.filter(author=request.user)
     return render(request, "algo/column/myalgo_list.html", {"algos": algos})
-
+    
+@login_required(login_url='/account/login')
+def myalgo_list_to_edit(request):
+    algos = MyalgoPost.objects.filter(author=request.user)
+    return render(request, "algo/column/myalgo_list_to_edit.html", {"algos": algos})
 @login_required(login_url='/account/login')
 def myalgo_detail(request, id, slug):
     algo = get_object_or_404(MyalgoPost, id=id, slug=slug)

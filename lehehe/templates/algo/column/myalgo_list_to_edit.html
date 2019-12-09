@@ -1,0 +1,33 @@
+{% extends "pingtai_base.html" %}
+{% load staticfiles %}
+{% block title %}模型列表{% endblock %}
+{% block title2 %}模型列表{% endblock %}
+{% block content %}
+   
+<div>
+<link rel="stylesheet" href="{% static  "css/bootstrap.css" %}">
+    <table class="table table-hover ">
+        <tr>
+            <td>序号</td>
+            <td>模型名称</td>
+            <td>代码编辑</td>
+        </tr>
+        {% for algo in algos %}
+        <tr id={{ algo.id }}>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ algo.title }}</td>
+            <td>
+                <a name="edit" href="{{ algo.get_absolute_url }}">
+                <span class="glyphicon glyphicon-pencil"></span></a>
+            </td>
+
+        </tr>
+        {% endfor %}
+    </table>
+
+</div>
+
+
+
+
+{% endblock %}

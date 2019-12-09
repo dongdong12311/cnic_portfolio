@@ -38,12 +38,9 @@
 			<a href="" class="user"><i class="fa fa-user"></i></a>
 			<nav class="main-menu">
 				<ul class="menu-list">
-                <li><a href="/">主页</a></li>
-                <li><a href="{% url 'article:myalgo_list' %}">我的模型</a></li>
-                <li><a href="{% url 'article:myalgo_post' %}">模型设计</a></li>
-                <li><a href="{% url 'article:article_list' %}">参数优化</a></li>
+                <li><a href="{% url 'article:myalgo_list' %}">平台介绍</a></li>
+                <li><a href="{% url 'article:myalgo_list' %}">新手指引</a></li>
 				<li><a href="{% static "docs/index.html" %}"/>API文档</a></li>
-                <li><a href="{% url 'account:my_home_page' %}">个人信息</a></li>
                 {% if user.is_authenticated %}
                 <li><a href="{% url 'account:user_logout' %}">退出登录</a></li>
                 <li>           </li>
@@ -68,7 +65,7 @@
 					<h4>High performance portfolio computing platform</h4>
 						<p>&nbsp</p>
 						<a href="{% url 'article:myalgo_list' %}">
-						<button class="site-btn sb-gradients">Get Started</button>
+						<button class="site-btn sb-gradients">进入平台</button>
 						</a>
                         </p>	
 				</div>

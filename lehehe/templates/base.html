@@ -7,9 +7,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="{% static  "css/bootstrap.css" %}">
+	<link rel="stylesheet" href="{% static "css/style.css" %}"/>
+
+<link type="text/css" href="{% static  "quant_files/common.css" %}" rel="stylesheet">
+<link rel="stylesheet" href="{% static  "quant_files/jq-common.css" %}">
 </head>
 <body>
-{% include "header2.html" %}
 <div class="container-fluid">
     {% block content %} {% endblock %}
 </div>

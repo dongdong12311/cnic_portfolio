@@ -1,25 +1,33 @@
-{% extends "base.html" %}
+{% extends "pingtai_base.html" %}
 {% load staticfiles %}
-{% block title %}articles list{% endblock %}
+{% block title %}模型列表{% endblock %}
+{% block title2 %}模型列表{% endblock %}
 {% block content %}
+
+    
+   
 <div>
+<link rel="stylesheet" href="{% static  "css/bootstrap.css" %}">
     <table class="table table-hover">
         <tr>
             <td>序号</td>
             <td>模型名称</td>
             <td>投资标的</td>
-            <td>操作</td>
+            <td>编辑/删除</td>
+			<td>模型运行</td>
         </tr>
         {% for algo in algos %}
         <tr id={{ algo.id }}>
             <td>{{ forloop.counter }}</td>
-            <td><a href="{{ algo.get_absolute_url }}">{{ algo.title }}</a></td>
+            <td>{{ algo.title }}</td>
             <td>{{ algo.column }}</td>
             <td>
                 <a name="edit" href="{% url 'article:redit_myalgo' algo.id %}">
                 <span class="glyphicon glyphicon-pencil"></span></a>
                 <a nane="delete" href="javascript:" onclick="del_article(this, {{ algo.id }})"><span class="glyphicon glyphicon-trash" style="margin-left:20px;"></span></a>
             </td>
+			<td> <a name="run" href="{% url 'article:run_test' algo.id %}">
+                <span class="glyphicon glyphicon-play"></span></a></td>
         </tr>
         {% endfor %}
     </table>
