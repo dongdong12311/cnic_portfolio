@@ -1,0 +1,61 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+	<title>CNICPortfolio 高性能投资组合计算平台</title>
+	<meta charset="UTF-8">
+	<meta name="description" content="Cryptocurrency Landing Page Template">
+	<meta name="keywords" content="cryptocurrency, unica, creative, html">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- Google Fonts -->
+	<link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+
+	<!-- Stylesheets -->
+	<link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}"/>
+	<link rel="stylesheet" href="{% static "css/font-awesome.min.css" %}"/>
+	<link rel="stylesheet" href="{% static "css/themify-icons.css" %}"/>
+	<link rel="stylesheet" href="{% static "css/animate.css" %}"/>
+	<link rel="stylesheet" href="{% static "css/owl.carousel.css" %}"/>
+	<link rel="stylesheet" href="{% static "css/style.css" %}"/>
+</head>
+
+<body>
+
+
+	<!-- Header section -->
+	<header class="header-section clearfix">
+		<div class="container-fluid">
+			<a href="/" class="site-logo">
+				<!--img src="{% static "img/logo.jpg" %}" alt=""-->
+			</a>
+			<div class="responsive-bar"><i class="fa fa-bars"></i></div>
+			<a href="" class="user"><i class="fa fa-user"></i></a>
+			<nav class="main-menu">
+				<ul class="menu-list">
+            <li><a href="\">首页</a></li>
+                <li><a href="{% url 'article:myalgo_list' %}">平台介绍</a></li>
+                <li><a href="{% url 'article:myalgo_list' %}">新手指引</a></li>
+				<li><a href="{% static "docs/index.html" %}"/>API文档</a></li>
+                {% if user.is_authenticated %}
+                <li><a href="{% url 'account:user_logout' %}">退出登录</a></li>
+                <li>           </li>
+                {% else %}
+                <li><a href="{% url 'account:user_login' %}">登录</a></li>
+                <li><a href="{% url 'account:user_register' %}">注册</a></li>
+                {% endif %}
+				</ul>
+			</nav>
+		</div>
+	</header>
+<div class="container-fluid">
+    {% block content %} {% endblock %}
+</div>
+	<!-- Hero section end -->
+	<!--====== Javascripts & Jquery ======-->
+	<script src="{% static "js/jquery-3.2.1.min.js" %}"></script>
+	<script src="{% static "js/owl.carousel.min.js" %}"></script>
+	<script src="{% static "js/main.js" %}"></script>
+{% block javascript %} {% endblock %}
+</body>
+</html>

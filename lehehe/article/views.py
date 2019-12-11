@@ -1,9 +1,10 @@
 from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from .models import ArticleColumn,AlgorithmPost,MyalgoPost,AlgoColumn
-from .forms import ArticleColumnForm,ArticlePostForm
+from .models import ArticleColumn,AlgorithmPost,MyalgoPost,AlgoColumn,AlgoOpt
+from .forms import ArticleColumnForm,ArticlePostForm,AlgoOptPostForm,AlgoOptPostForm
 import os
 from .forms import MyalgoPostPostForm
 from .models import name_map
@@ -81,7 +82,7 @@ def article_post(request):
             try:
                 new_article = article_post_form.save(commit=False)
                 new_article.author = request.user
-                new_article.column = request.user.article_column.get(id=request.POST['column_id'])
+                #new_article.column = request.user.article_column.get(id=request.POST['column_id'])
                 new_article.save()
                 return HttpResponse("1")
             except:
@@ -95,16 +96,7 @@ def article_post(request):
                       {"article_post_form": article_post_form, 
                        "article_columns": article_columns})
 
-@login_required(login_url='/account/login')
-def article_list(request):
-    articles = AlgorithmPost.objects.filter(author=request.user)
-    return render(request, "article/column/article_list.html", {"articles": articles})
-from django.shortcuts import  get_object_or_404
 
-@login_required(login_url='/account/login')
-def article_detail(request, id, slug):
-    article = get_object_or_404(AlgorithmPost, id=id, slug=slug)
-    return render(request, "article/column/article_detail.html", {"article": article})
 
 @login_required(login_url='/account/login')
 def myalgo_list(request):
@@ -112,9 +104,25 @@ def myalgo_list(request):
     return render(request, "algo/column/myalgo_list.html", {"algos": algos})
     
 @login_required(login_url='/account/login')
+def myalgoopt_list(request):
+    algoopts = AlgoOpt.objects.filter(author=request.user)
+    for i in range(len(algoopts)):
+        alggoopt = algoopts[i]
+        task_id = alggoopt.task_name
+        try:
+            myalgopost = MyalgoPost.objects.get(id = task_id)
+            alggoopt.task_name =myalgopost.title
+        except:
+            _del_myalgoopt(request,alggoopt.id)
+        
+    return render(request, "algo/column/myalgoopt_list.html",{"algoopts":algoopts})    
+    
+@login_required(login_url='/account/login')
 def myalgo_list_to_edit(request):
     algos = MyalgoPost.objects.filter(author=request.user)
     return render(request, "algo/column/myalgo_list_to_edit.html", {"algos": algos})
+    
+    
 @login_required(login_url='/account/login')
 def myalgo_detail(request, id, slug):
     algo = get_object_or_404(MyalgoPost, id=id, slug=slug)
@@ -122,23 +130,22 @@ def myalgo_detail(request, id, slug):
     algo_json = json.dumps(ParseMyalgoPost(algo))
 
     return render(request, "algo/column/algo_detail.html", {"algo": algo,"algo_json":algo_json})
-
-
-
-
-
+import pandas as pd
 @login_required(login_url='/account/login')
-@require_POST
-@csrf_exempt
-def del_article(request):
-    article_id = request.POST['article_id']
-    
-    try:
-        article = AlgorithmPost.objects.get(id=article_id)
-        article.delete()
-        return HttpResponse("1")
-    except:
-        return HttpResponse("2")
+def myalgo_opt_detail(request, id, slug):
+    algoopt = get_object_or_404(AlgoOpt, id=id, slug=slug)
+    data = json.loads(algoopt.config)
+    for temp in data:
+        for d in temp:
+            print(d)
+    return HttpResponse(str(1))
+    #return HttpResponse("1")
+    #algo_json = json.dumps(ParseMyalgoPost(algo))
+
+    #return render(request, "algo/column/algo_detail.html", {"algo": algo,"algo_json":algo_json})
+
+
+
 
 @login_required(login_url='/account/login')
 @require_POST
@@ -153,28 +160,23 @@ def del_myalgo(request):
     except:
         return HttpResponse("2")  
     
-    
+@login_required(login_url='/account/login')
+@require_POST
+@csrf_exempt
+def del_myalgoopt(request):
+    algo_id = request.POST['article_id']
+    _del_myalgoopt(request,algo_id)
+  
+
 @login_required(login_url='/account/login')
 @csrf_exempt
-def redit_article(request, article_id):
-    if request.method == "GET":
-        article_columns = request.user.article_column.all()
-        article = AlgorithmPost.objects.get(id=article_id)
-        this_article_form = ArticlePostForm(initial={"title": article.title})
-        this_article_column = article.column
-        return render(request, "article/column/redit_article.html",
-                      {"article": article, "article_columns": article_columns, "this_article_column": this_article_column, "this_article_form": this_article_form})
-    else:
-        redit_article = AlgorithmPost.objects.get(id=article_id)
-        try:
-            redit_article.column = request.user.article_column.get(id=request.POST['column_id'])
-            redit_article.title = request.POST['title']
-            redit_article.body = request.POST['body']
-            redit_article.save()
-            return HttpResponse("1")
-        except:
-            return HttpResponse("2")
-        
+def _del_myalgoopt(request,algo_id):
+    try:
+        article = AlgoOpt.objects.get(id=algo_id)
+        article.delete()
+        return HttpResponse("1")
+    except:
+        return HttpResponse("2")       
 
         
         
@@ -191,15 +193,28 @@ def ParseMyalgoPost(algo):
             "Bl模型":"sample_bl_model",
             "Hpr模型":"sample_hpr"}
     name = algo.algo_column.column
-    initial_capital = float(algo.initial_capital)
+    initial_capital = 0
+    balanced_dates= 0
+    expected_return_days = 0
+    try:
+        initial_capital = float(algo.initial_capital)
+        balanced_dates = int(algo.balanced_dates)
+        expected_return_days= int(algo.expected_return_days)
+    except:
+        pass
+    
     target_return = algo.target_return
     target_risk = algo.target_risk
-    expected_return_days= int(algo.expected_return_days)
+    
     cov_method  = algo.cov_method
-    balanced_dates = int(algo.balanced_dates)
+    
     benchmark = algo.benchmark
     opt_criterion = algo.opt_criterion
-    stocks = json.loads(algo.portfolio)
+    json_stocks = algo.portfolio
+    if len(json_stocks):
+        stocks = json.loads(json_stocks)
+    else:
+        stocks = "[]"
     res = {"stragety": name_map[name], "start": date_to_int(algo.start_date), 
      "end": date_to_int(algo.end_date), "initial_capital": initial_capital, 
      "benchmark": benchmark, 
@@ -211,8 +226,9 @@ def ParseMyalgoPost(algo):
                 "cleaned_weights": True, 
                 "target_return": target_return, 
                 "target_risk": target_risk, 
-                "risk_free_rate": 0.02, 
-                "opt_param": {}
+               
+                "opt_param": {} ,
+                #"risk_free_rate": 0.02, 
             }
     
 
@@ -232,13 +248,15 @@ from trading_system.portfolio.summarise import Cal
 @csrf_exempt
 def run_test(request,article_id):
     if request.method == "GET":
+        
         algo = MyalgoPost.objects.get(id=article_id)
         config = ParseMyalgoPost(algo)
+        
         stragety = __import__(config['stragety'])
-        try:
-            res = Run_func(stragety.initialize,stragety.handle_data,config)
-        except Exception as  e:
-            return HttpResponse(str(e))
+
+        res = Run_func(stragety.initialize,stragety.handle_data,config)
+
+        
         data = res['sys_analyser']
         portfolio_series = data['portfolio']['unit_net_value']
         market_series = data['benchmark_portfolio']['unit_net_value']
@@ -316,14 +334,14 @@ def load_code(algo_column):
 @csrf_exempt
 def myalgo_post(request):
     if request.method == "POST":
+        
         algo_post_form = MyalgoPostPostForm(data=request.POST)
-
         if algo_post_form.is_valid():
             cd = algo_post_form.cleaned_data
             try:
                 new_algo = algo_post_form.save(commit=False)
                 new_algo.author = request.user
-                new_algo.column = request.user.article_column.get(id=request.POST['column_id'])
+                new_algo.column = ArticleColumn.objects.get(id=request.POST['column_id'])
                 new_algo.algo_column = AlgoColumn.objects.get(id=request.POST['algo_column'])
                 new_algo.algo_code = load_code(new_algo.algo_column.column)    
                 new_algo.save()
@@ -335,18 +353,47 @@ def myalgo_post(request):
     else:
         algo_post_form = MyalgoPostPostForm()
         algo_type_columns = AlgoColumn.objects.all()
-        article_columns = request.user.article_column.all()
+        article_columns = ArticleColumn.objects.all()
         return render(request, "algo/algopost.html", {"algo_post_form": algo_post_form,
                                                       "article_columns": article_columns,
                                                       "algo_type_columns":algo_type_columns})
 
+@login_required(login_url='/account/login')
+@csrf_exempt
+def myalgoopt_post(request):
+    if request.method == "POST":
+        algo_opt_post_form = AlgoOptPostForm(data=request.POST)
+        if algo_opt_post_form.is_valid():
+            #cd = algo_post_form.cleaned_data
+            try:
+                new_algo = algo_opt_post_form.save(commit=False)
+                new_algo.author = request.user
+                new_algo.task_name = request.POST['task_id'] 
+                new_algo.save()
+                return HttpResponse("1")
+            except:
+                return HttpResponse("2")
+        else:
+            return HttpResponse("3")
+    else:
+        algo_post_form = AlgoOptPostForm()
+        youhua = {"balanced_dates":"调仓间隔",
+           "expected_return_days":"数据周期",
+           "beta":"贝塔值",
+           "target_risk":"预期风险",
+           "target_return":"预期收益"}
+        myalgoPosts = MyalgoPost.objects.filter(author=request.user)
+        return render(request, "algo/algo_opt_post.html", 
+                      {"algo_post_form": algo_post_form,
+                      "myalgoPosts": myalgoPosts,"youhua":youhua.values(),
+                                                      })
 
-from .models import map_dic
+
 @login_required(login_url='/account/login')
 @csrf_exempt
 def redit_myalgo(request, article_id):
     if request.method == "GET":
-        article_columns = request.user.article_column.all()
+        article_columns = ArticleColumn.objects.all()
         algo_type_columns = AlgoColumn.objects.all()
         algo = MyalgoPost.objects.get(id=article_id)
 
@@ -376,7 +423,7 @@ def redit_myalgo(request, article_id):
         for dd in list_to_edit:
                 setattr(redit_article,dd,request.POST[dd])
         try:
-            redit_article.column = request.user.article_column.get(id=request.POST['column_id'])
+            redit_article.column = ArticleColumn.objects.get(id=request.POST['column_id'])
             redit_article.algo_column = AlgoColumn.objects.get(id =request.POST['algo_column'])
             redit_article.algo_code = load_code(redit_article.algo_column.column) 
             redit_article.save()
@@ -391,26 +438,49 @@ def redit_myalgo(request, article_id):
 
 
 
-
-
-
- 
-# 表单
 @login_required(login_url='/account/login')
 @csrf_exempt
-def myalgo_post2(request):
-    ctx ={}
-    if request.POST:
-        ctx['rlt'] = request.POST['q']
-        if ctx['rlt']:
-            return HttpResponse(str(ctx['rlt']))
-    return render(request, "algo/algopost.html", ctx)
- 
-# 接收请求数据
-def save_algo_form(request):  
-    request.encoding='utf-8'
-    message = '你提交了空表单'
-    return HttpResponse(message)
+def redit_myalgoopt(request, article_id):
+    if request.method == "GET":
+        article_columns = ArticleColumn.objects.all()
+        algo_type_columns = AlgoColumn.objects.all()
+        algo = MyalgoPost.objects.get(id=article_id)
+
+        algo_post_form = MyalgoPostPostForm(
+              instance=algo )
+        this_article_column = algo.column
+        this_algo_type_column = algo.algo_column
+        return render(request, "algo/column/redit_algo.html",
+                      {"algo": algo, "article_columns": article_columns,
+                       "algo_type_columns":algo_type_columns,
+                       "this_algo_type_column":this_algo_type_column,
+                       "this_article_column": this_article_column, 
+                       "algo_post_form": algo_post_form})
+    else:
+        redit_article = MyalgoPost.objects.get(id=article_id)
+        list_to_edit = ["title","portfolio","initial_capital",
+                        "start_date","end_date","benchmark",
+         "balanced_dates",
+           "expected_return_days",
+           "cov_method",
+           "beta",
+           "opt_criterion",
+           "target_risk",
+           "target_return",
+           "p_matrix",
+           "q_matrix"]  
+        for dd in list_to_edit:
+                setattr(redit_article,dd,request.POST[dd])
+        try:
+            redit_article.column = ArticleColumn.objects.get(id=request.POST['column_id'])
+            redit_article.algo_column = AlgoColumn.objects.get(id =request.POST['algo_column'])
+            redit_article.algo_code = load_code(redit_article.algo_column.column) 
+            redit_article.save()
+            return HttpResponse("1")
+
+        except :
+            return HttpResponse("2") 
+
 
 
 

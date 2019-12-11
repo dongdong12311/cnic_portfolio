@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import AlgorithmPost,MyalgoPost,AlgoColumn
+from .models import AlgorithmPost,MyalgoPost,AlgoColumn,AlgoOpt
 # Register your models here.
 @admin.register(AlgorithmPost)
 class AlgorithmAdmin(admin.ModelAdmin):
@@ -11,7 +11,9 @@ class MyalgoPostAdmin(admin.ModelAdmin):
     list_display = ('author', 'title', 'algo_column')
     list_filter = ('author','title')
     
-    
+@admin.register(AlgoOpt)
+class AlgoOptAdmin(admin.ModelAdmin):
+    list_display = ('author', 'task_name','config')    
     
 @admin.register(AlgoColumn)
 class AlgoColumnAdmin(admin.ModelAdmin):

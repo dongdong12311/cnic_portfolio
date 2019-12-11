@@ -7,7 +7,7 @@ Created on Thu Nov 21 11:23:33 2019
 """
 
 from django import forms
-from .models import ArticleColumn,AlgorithmPost,MyalgoPost
+from .models import ArticleColumn,AlgorithmPost,MyalgoPost,AlgoOpt
 
 
 class ArticleColumnForm(forms.ModelForm):
@@ -19,10 +19,14 @@ class ArticlePostForm(forms.ModelForm):
     class Meta:
         model = AlgorithmPost
         fields = ("title", "body")
-        
+class AlgoOptPostForm(forms.ModelForm):
+    class Meta:
+        model = AlgoOpt
+        fields = ("task_name","config")
 class MyalgoPostPostForm(forms.ModelForm):
     class Meta:
         model = MyalgoPost
+        
         exclude = ['author',
                    'column','algo_column','slug'] 
         #fields = ("title", "initial_capital","start_date","end_date","portfolio",

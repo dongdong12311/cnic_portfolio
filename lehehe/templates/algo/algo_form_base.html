@@ -1,0 +1,111 @@
+{% extends "pingtai_base.html" %}
+{% load staticfiles %}
+{% block content %}
+        <div style="margin-left:10px">
+            <form class="form-horizontal" action="." method="post">{% csrf_token %}
+            <div class="row" style="margin-top: 10px;">
+            <div class="col-md-2 text-right"><span>模型名称:</span></div>
+            <div class="col-md-10 text-left">{{algo_post_form.title}}</div>
+        </div>
+        <div class="row" style="margin-top: 10px;">
+        <div class="col-md-2 text-right"><span>投资类别:</span></div>
+            <div class="col-md-10 text-left">
+                
+                    <select id="which_column">
+                            {% for column in article_columns %}
+                            {% if column == this_article_column.column %}
+                            <option value="{{column.id}}" selected="selected">{{column.column}}</option>
+                            {% else %}
+                            <option value="{{column.id}}">{{column.column}}</option>
+
+                            {% endif %}
+                            {% endfor %}
+                    </select>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 10px;">
+        <div class="col-md-2 text-right"><span>模型类别:</span></div>
+            <div class="col-md-10 text-left">
+            
+                <select id="which_type">
+                    {% for column in algo_type_columns %}
+                            {% if column == this_algo_type_column.column %}
+                            <option value="{{column.id}}" selected="selected">{{column.column}}</option>
+                            {% else %}
+                            <option value="{{column.id}}">{{column.column}}</option>
+
+                            {% endif %}
+                    {% endfor %}
+
+                </select>
+            </div>
+        </div>
+          <div class="row" style="margin-top: 10px;">
+            <div class="col-md-2 text-right"><span>初始资金:</span></div>
+            <div class="col-md-10 text-left">{{algo_post_form.initial_capital}}</div>
+        </div>         
+     
+          <div class="row" style="margin-top: 10px;">
+            <div class="col-md-2 text-right"><span>初始日期:</span></div>  
+            <div class="col-md-10 text-left">{{algo_post_form.start_date}}</div>    
+        </div>               
+          <div class="row" style="margin-top: 10px;">
+            <div class="col-md-2 text-right"><span>结束日期:</span></div>  
+            <div class="col-md-10 text-left">{{algo_post_form.end_date}}</div>    
+        </div>
+        <div class="row" style="margin-top: 10px;">
+            <div class="col-md-2 text-right"><span>调仓间隔</span></div>
+            <div class="col-md-10 text-left">{{algo_post_form.balanced_dates}}</div>
+        </div>   
+        <div class="row" style="margin-top: 10px;">
+            <div class="col-md-2 text-right"><span>基准标的</span></div>
+            <div class="col-md-10 text-left">{{algo_post_form.benchmark}}</div>
+        </div>            
+        <div class="row" style="margin-top: 10px;">
+            <div class="col-md-2 text-right"><span>投资标的</span></div>
+            <div class="col-md-10 text-left">{{algo_post_form.portfolio}}</div>
+        </div>
+                <div class="row" style="margin-top: 10px;">
+            <div class="col-md-2 text-right"><span>最优化方法</span></div>
+            <div class="col-md-10 text-left">{{algo_post_form.opt_criterion}}</div>
+        </div> 
+                        <div class="row" style="margin-top: 10px;">
+            <div class="col-md-2 text-right"><span>预期收益</span></div>
+            <div class="col-md-10 text-left">{{algo_post_form.target_return}}</div>
+        </div>    
+                <div class="row" style="margin-top: 10px;">
+            <div class="col-md-2 text-right"><span>预期风险</span></div>
+            <div class="col-md-10 text-left">{{algo_post_form.target_risk}}</div>
+        </div>  
+        <div class="row" style="margin-top: 10px;">
+            <div class="col-md-2 text-right"><span>数据周期</span></div>
+            <div class="col-md-10 text-left">{{algo_post_form.expected_return_days}}</div>
+        </div>
+            <div class="row" style="margin-top: 10px;">
+            <div class="col-md-2 text-right"><span>协方差算法</span></div>
+            <div class="col-md-10 text-left">{{algo_post_form.cov_method}}</div>
+        </div>
+                    <div class="row" style="margin-top: 10px;">
+            <div class="col-md-2 text-right"><span>贝塔值</span></div>
+            <div class="col-md-10 text-left">{{algo_post_form.beta}}</div>
+        </div>    
+                <div class="row" style="margin-top: 10px;">
+            <div class="col-md-2 text-right"><span>BL模型P矩阵</span></div>
+            <div class="col-md-10 text-left">{{algo_post_form.p_matrix}}</div>
+        </div> 
+        <div class="row" style="margin-top: 10px;">
+            <div class="col-md-2 text-right"><span>BL模型Q矩阵</span></div>
+            <div class="col-md-10 text-left">{{algo_post_form.q_matrix}}</div>
+        </div>                    
+            
+            
+        
+                <div class="row">
+                    <input type="button" class="btn btn-primary btn-lg" value="发布" onclick={% block jspubfunction %}{% endblock %}>
+                </div>
+            </form>
+        </div>
+{% block formscript %}
+{% endblock %}
+
+{% endblock %}

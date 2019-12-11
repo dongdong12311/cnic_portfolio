@@ -9,7 +9,7 @@ from slugify import slugify
 
 "投资的类型"
 class ArticleColumn(models.Model):
-    user = models.ForeignKey(User, related_name='article_column', on_delete=models.CASCADE)
+    #user = models.ForeignKey(User, related_name='article_column', on_delete=models.CASCADE)
     column = models.CharField(max_length=200)
     created = models.DateField(auto_now_add=True)
 
@@ -19,6 +19,7 @@ class ArticleColumn(models.Model):
     def __len__(self):
         return True
 
+#模型名称
 class AlgoColumn(models.Model):
     #user = models.ForeignKey(User, related_name='algo_column', on_delete=models.CASCADE)
     column = models.CharField(max_length=200)
@@ -55,26 +56,27 @@ map_dic = {"title":"模型名称","column":"投资类别",
            "p_matrix":"BL模型P矩阵",
            "q_matrix":"BL模型Q矩阵",
            }
+           
 class MyalgoPost(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="algo")
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=20)
     slug = models.SlugField(max_length=500)
     column = models.ForeignKey(ArticleColumn, on_delete=models.CASCADE, related_name="algo_type_column")
     
     algo_column = models.ForeignKey(AlgoColumn, on_delete=models.CASCADE, related_name="algo_column")
     updated = models.DateTimeField(auto_now=True)
     
-    initial_capital = models.CharField(max_length=20)
+    initial_capital = models.CharField(blank=True,max_length=20)
     
-    start_date = models.DateField()
+    start_date = models.DateField(default = timezone.now)
     
-    end_date =  models.DateField()
+    end_date =  models.DateField(default = timezone.now)
     
-    portfolio =  models.TextField()
+    portfolio =  models.TextField(blank=True,)
     
-    benchmark = models.CharField(max_length=10)
+    benchmark = models.CharField(blank=True,max_length=10)
     
-    balanced_dates = models.CharField(max_length=30)
+    balanced_dates = models.CharField(blank=True,max_length=30)
     
     expected_return_days = models.CharField(blank=True,max_length=30)
     
@@ -117,11 +119,21 @@ class MyalgoPost(models.Model):
                 res.second = temp
                 result.append(res)
         return result
-    
-    
+
+class AlgoOpt(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="algooptuser")
+    task_name = models.CharField(blank=True,max_length=20)
+    config = models.TextField(blank=True,)
+    slug = models.SlugField(blank=True,max_length=500)
+    def save(self, *args, **kargs):
+        self.slug = slugify(self.task_name)
+        super(AlgoOpt, self).save(*args, **kargs)
+    def get_absolute_url(self):
+        return reverse("article:myalgo_opt_detail", args=[self.id, self.slug])  
+            
 class AlgorithmPost(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="article")
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=20)
     slug = models.SlugField(max_length=500)
     column = models.ForeignKey(ArticleColumn, on_delete=models.CASCADE, related_name="article_column")
 

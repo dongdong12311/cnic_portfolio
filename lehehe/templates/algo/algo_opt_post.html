@@ -1,0 +1,167 @@
+{% extends "algo\algo_opt_form_base.html" %}
+{% load staticfiles %}
+{% block title %}参数优化{% endblock %}
+{% block title2 %}参数优化 {% endblock %}
+
+{% block jspubfunction %}"publish_myalgoopt()"{% endblock %}
+        {% block opttable %}
+        <style type="text/css">
+html, body { padding: 0; margin: 0;  font-family:"微软雅黑";}
+body, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, fieldset, input, button, textarea, p, blockquote, th,td { padding: 0; margin: 0; }
+body, button, input, textarea {font-family:"微软雅黑";}
+ol,ul,li { list-style:none;}
+h1, h2, h3, h4, h5, h6 { font-size: 100%; }
+a { text-decoration:none;}
+img { display:block; border:0;}
+.clearfix:after{content:".";display:block;height:0px;clear:both;visibility:hidden;}
+.clearfix{zoom:1;}
+button{background:none; border:none;}
+.preserve{padding:0 6px; float:right; margin-top:10px;}
+
+.append_btu,.delete_btu{ float:right; margin-right:10px; color:#000; font-weight:normal;} 
+
+.box_max{width:650px; auto 0 auto; font-size:15px; }
+.login_box{width:630px;}
+/*table*/
+#addCont{border-left: 1px solid #000;border-top: 1px solid #000; }
+#addCont td{border-bottom: 1px solid #000;border-right: 1px solid #000;}
+#addCont .box_td_left{ text-align:center;padding:10px 0; background:#92cddb;}
+#addCont .box_td_right{padding:5px;}
+#addCont .box_td_right textarea{max-width:450px;min-width:450px; min-height:50px; border:none}
+#addCont .left_name{width:115px; height:22px; line-height:22px;  background:#92cddb; border:none; text-align:center; border-bottom:1px solid #ccc;}
+.min_input{margin:3px 0;}
+.min_input input{width:300px; height:24px; line-height:24px; border:none; border-bottom:1px solid #ccc;}
+</style>
+<script type="text/javascript" src="{% static "/js/jquery-1.7.2.min.js" %}"></script>
+
+<script type="text/javascript">
+$(function(){
+	var aTr = document.getElementsByTagName('tr');
+	
+	var aDlist = '<tr>' +
+			'<td width="20%" align="center" valign="top" class="box_td_right">' 
+           + '<select id="which_column"class="left_name" >' 
+           +'{% for column in youhua %}<option value="{{column}}">{{column}}</option>{% endfor %}'
+           +'</select>' 
+			+ '</td>' 
+			+'<td width="20%" align="center"  class="box_td_right"><input type="text" class="left_name" /></td>'
+			+'<td width="20%" align="center"  class="box_td_right"><input type="text" class="left_name" /></td>'
+			+ '<td width="20%" align="center"  class="box_td_right"><input type="text" class="left_name" /></td>' 
+			+ '<td width="10%"   class="box_td_right">'
+			+'<span class="del-list" ><a href="javascript:;" class="as delete_btu">删除</a></span></td>' +
+		   '</tr>';
+	var aDlist2 = '<tr>' +
+			'<td width="20%" align="center" valign="top" class="box_td_right">' 
+           +'<input type="text" class="left_name" />'
+			+ '</td>' 
+			+'<td width="20%" align="center"  class="box_td_right"><input type="text" class="left_name" /></td>'
+			+'<td width="20%" align="center"  class="box_td_right"><input type="text" class="left_name" /></td>'
+			+ '<td width="20%" align="center"  class="box_td_right"><input type="text" class="left_name" /></td>' 
+			+ '<td width="10%"   class="box_td_right">'
+			+'<span class="del-list" ><a href="javascript:;" class="as delete_btu">删除</a></span></td>' +
+		   '</tr>';	
+	$('.add-icon').click(function(){
+			$('#addCont').find('tr').css('display','table-row');
+			$('#addCont').find('tbody').append(aDlist);        
+	});
+	$('.add-icon2').click(function(){
+			$('#addCont').find('tr').css('display','table-row');
+			$('#addCont').find('tbody').append(aDlist2);        
+	});	
+	$('.as').live('click',function(){
+			$(this).parents("tr").remove();
+			
+			
+	});
+													
+});
+</script>
+</head>
+
+
+
+<div class="box_max"> 
+   <div class="login_box"> 
+        <table id="addCont" width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td width="20%" align="center" valign="top" class="box_td_right">优化参数</td>
+          <td width="20%" align="center"  class="box_td_right">优化初值</td>
+		  <td width="20%" align="center"  class="box_td_right">优化终值</td>
+		  <td width="20%" align="center"  class="box_td_right">网格数量</td>
+		  <td width="8%" align="center"  class="box_td_right">操作</td>
+        </tr>
+
+
+  </table>
+  
+  <p class="mt10 ft14">
+  <a class="add-icon append_btu" href="javascript:;">添加内置参数</a>
+  <a class="add-icon2 append_btu" href="javascript:;">添加自定义参数</a>
+  </p>
+  
+  </div>
+</div>   
+
+
+
+
+        {% endblock %}
+{% block formscript %}
+<script type="text/javascript" src="{% static "/js/jquery.tabletojson.js" %}"></script>
+<script type="text/javascript">
+function publish_myalgoopt(){
+    var task_id = $("#which_column").val();
+    
+    var set = [];
+    $('table tr').each(function() {
+        
+        $(this).find('td').each(function() {
+            
+        });
+        
+        
+    });
+    $('table tr').each(function(i, _tr){//循环表格的行
+          var row = [];
+        var tds = $(_tr).find("td");//得到每行的所有列
+        tds.each(function(j, _td){//循环每列
+            var _ipt = $(_td).find("input");//查找每列当中的INPUT控件
+            var hasInput = (_ipt.length>0)?1:0;
+            var _ipt2 = $(_td).find("option:selected");//查找每列当中的INPUT控件
+            var hasSelect = (_ipt2.length>0)?1:0;
+            if(hasInput) {
+                row.push((_ipt.val()));
+                //_ipt.attr("value", _ipt.val());//如果有INPUT控件就给它设置value值
+            }else if (hasSelect){
+              
+               row.push($(_ipt2).val());
+            }else
+            {
+              row.push($(_td).text());
+             }
+            
+        });set.push(row);
+    });
+    $.ajax({
+        url: "{% url 'article:myalgoopt_post' %}",
+        type: "POST",
+        data: {"task_id":task_id,     
+               "config":JSON.stringify(set),
+               },
+        success: function(e){
+            if(e=="1"){
+                //layer.msg("successful");
+                location.href = "{% url 'article:myalgoopt_list' %}";//修改后：文章发布成功后跳转到文章列表
+            }else if(e=="2"){
+                alert("sorry.") ;
+            }else{
+                alert("请填写必填项目");
+            }
+        },
+    });
+}
+
+</script>
+
+{% endblock %}
+

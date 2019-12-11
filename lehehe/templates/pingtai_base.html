@@ -37,14 +37,7 @@
                 <!-- Logo -->
                 <!-- ============================================================== -->
                 <div class="navbar-header">
-                    
-                        <!-- Logo icon -->
-
-                        <!--End Logo icon -->
-                        <!-- Logo text -->
-                        
-                            <!-- dark Logo text -->
-                            <img src="{% static  "kuangjia/assets/images/logo.png" %}" style=  "width:250px"  alt="homepage" class="dark-logo" />
+                <img src="{% static  "kuangjia/assets/images/logo.png" %}" style=  "width:250px"  alt="homepage" class="dark-logo" />
                        
                    
                 </div>
@@ -87,17 +80,19 @@
                 <nav class="sidebar-nav">
                     <ul id="sidebarnav">
                         <li>
-                            <a href="{% url 'article:myalgo_list' %}" class="waves-effect"><i class="fa fa-clock-o m-r-10" aria-hidden="true"></i>我的模型</a>
+                            <a href="{% url 'article:myalgo_list' %}" class="waves-effect"><i class="fa fa-user-o m-r-10" aria-hidden="true"></i>我的模型</a>
                         </li>
                         <li>
-                            <a href="{% url 'article:myalgo_post' %}" class="waves-effect"><i class="fa fa-user m-r-10" aria-hidden="true"></i>模型设计</a>
-                        </li>
-
-                        <li>
-                            <a href="{% url 'article:myalgo_list_to_edit' %}" class="waves-effect"><i class="fa fa-font m-r-10" aria-hidden="true"></i>模型编程</a>
+                            <a href="{% url 'article:myalgo_post' %}" class="waves-effect"><i class="fa fa-table m-r-10" aria-hidden="true"></i>模型设计</a>
                         </li>
                         <li>
-                            <a href="{% static "docs/index.html" %}" class="waves-effect"><i class="fa fa-globe m-r-10" aria-hidden="true"></i>平台文档</a>
+                            <a href="{% url 'article:myalgoopt_list' %}" class="waves-effect"><i class="fa fa-edit m-r-10" aria-hidden="true"></i>参数优化</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'article:myalgo_list_to_edit' %}" class="waves-effect"><i class="fa fa-globe m-r-10" aria-hidden="true"></i>模型编程</a>
+                        </li>
+                        <li>
+                            <a href="{% static "docs/index.html" %}" class="waves-effect"><i class="fa fa-file m-r-10" aria-hidden="true"></i>平台文档</a>
                         </li>
                          <li>
                             <a href="#" class="waves-effect"><i class="fa fa-font m-r-10" aria-hidden="true"></i>结果分析</a>
@@ -116,12 +111,15 @@
             <!-- Container fluid  -->
             <!-- ============================================================== -->
             <div class="container-fluid">
-                         <div class="row page-titles">
+                    <div class="row page-titles">
                     <div class="col-md-6 col-8 align-self-center">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="{% url 'article:myalgo_list' %}" >主页</a></li>
                             <li class="breadcrumb-item active">{% block title2 %}{% endblock %}</li>
                         </ol>
+                    </div>
+                        {% block botton %} {% endblock %}               
+
                     </div>
                 </div>
                     {% block content %} {% endblock %}
@@ -131,7 +129,6 @@
 {% block javascript %} 
 <!-- All Jquery -->
 <!-- ============================================================== -->
-<script src="{% static "kuangjia/assets/plugins/jquery/jquery.min.js" %}"></script>
 <!-- Bootstrap tether Core JavaScript -->
 <script src="{% static "kuangjia/assets/plugins/bootstrap/js/tether.min.js" %}"></script>
 <script src="{% static "kuangjia/assets/plugins/bootstrap/js/bootstrap.min.js" %}"></script>
@@ -149,9 +146,6 @@
 <!-- This page plugins -->
 <!-- ============================================================== -->
 <!-- Flot Charts JavaScript -->
-<script src="{% static "kuangjia/assets/plugins/flot/jquery.flot.js" %}"></script>
-<script src="{% static "kuangjia/assets/plugins/flot.tooltip/js/jquery.flot.tooltip.min.js" %}"></script>
-<script src="{% static "kuangjia/js/flot-data.js" %}"></script>
 <!-- ============================================================== -->
 <!-- Style switcher -->
 <!-- ============================================================== -->

@@ -1,0 +1,40 @@
+{% extends "pingtai_base.html" %}
+{% load staticfiles %}
+{% block content %}
+
+<div style="margin-left:10px">
+    <form class="form-horizontal" action="." method="post">{% csrf_token %}
+
+        <div class="row" style="margin-top: 10px;">
+        <div class="col-md-2 text-right"><span>优化目标</span></div>
+            
+                
+                    <select id="which_column">
+                        {% for myalgoPost in myalgoPosts %}
+                        <option value="{{myalgoPost.id}}">{{myalgoPost.title}}</option>
+                        {% endfor %}
+                    </select>
+
+          
+      
+   
+
+        </div>
+        <div class="row" style="margin-top: 10px;">    
+        <div class="col-md-2 text-right"><span>&nbsp</span></div>
+                            
+                        {% block opttable %}
+                            {% endblock %}
+                 
+        </div>    
+        <div class="row" >
+            <input type="button" class="btn btn-primary" value="保存" onclick={% block jspubfunction %}{% endblock %}>
+        </div>
+    </form>
+</div>
+
+
+{% block formscript %}
+{% endblock %}
+
+{% endblock %}
