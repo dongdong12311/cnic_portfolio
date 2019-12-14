@@ -12,9 +12,7 @@
 
 
         
-<link href="{% static  "algo_list/jquery-ui-jq.css" %}" rel="stylesheet">
-<link href="{% static  "quant_files/algorithm.css" %}"   rel="stylesheet">
-<link href="{% static  "algo_list/newBootstrapDialog.css" %}" rel="stylesheet">
+
 	
 
 
@@ -139,7 +137,7 @@
 </script>      
   
 <script>
-     var buildDom = require("ace/lib/dom").buildDom;
+    var buildDom = require("ace/lib/dom").buildDom;
     var editor = ace.edit("editor");
     editor.session.setMode("ace/mode/python");
         var refs = {};
@@ -150,10 +148,23 @@
     }
     editor.on("input", updateToolbar);
     function save() {
+        
         localStorage.savedValue = editor.getValue(); 
-        editor.session.getUndoManager().markClean();
+
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        editor.session.getUndoManager().markClean();        
         updateToolbar();
+
     }
+
     editor.commands.addCommand({
         name: "保存",
         exec: save,

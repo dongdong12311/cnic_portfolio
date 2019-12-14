@@ -131,15 +131,22 @@ def myalgo_detail(request, id, slug):
 
     return render(request, "algo/column/algo_detail.html", {"algo": algo,"algo_json":algo_json})
 import pandas as pd
+
+def load_algoopt(algoopt):
+    data = json.loads(algoopt.config)
+    biaotou = data[0]
+    data = pd.DataFrame(data[1:])
+    data.columns = biaotou
+    del data[biaotou[-1]]
+    return data    
 @login_required(login_url='/account/login')
 def myalgo_opt_detail(request, id, slug):
     algoopt = get_object_or_404(AlgoOpt, id=id, slug=slug)
-    data = json.loads(algoopt.config)
-    for temp in data:
-        for d in temp:
-            print(d)
-    return HttpResponse(str(1))
-    #return HttpResponse("1")
+    
+    data = load_algoopt(algoopt)
+    opt_table = data.to_html(classes='table table-hover')
+    return HttpResponse(opt_table)
+    #return HttpResponse("1111")
     #algo_json = json.dumps(ParseMyalgoPost(algo))
 
     #return render(request, "algo/column/algo_detail.html", {"algo": algo,"algo_json":algo_json})
@@ -165,7 +172,7 @@ def del_myalgo(request):
 @csrf_exempt
 def del_myalgoopt(request):
     algo_id = request.POST['article_id']
-    _del_myalgoopt(request,algo_id)
+    return _del_myalgoopt(request,algo_id)
   
 
 @login_required(login_url='/account/login')
@@ -317,7 +324,68 @@ def run_test(request,article_id):
         end_date = temp[-1]
         initial_capital = config['initial_capital']
         return render(request,'algo/back_test.html',locals())
+
+
+def get_key(res,key):
+    return res['sys_analyser']['summary'][key]
+
+
+
+
+
+
+def grid_search(config):
+    stragety = __import__(config['stragety'])
+    result = []
+    params,all_param = generate_all_param(config)
+
+    for param in all_param:
+        for i in range(len(param)):
+            config[params[i]] = param[i]
         
+
+        res = Run_func(stragety.initialize,stragety.handle_data,config)
+
+        result.append([ param,get_key(res,'sharpe'),get_key(res,'alpha'),
+                       get_key(res,'max_drawdown'),get_key(res,'annualized_returns')])  
+    return result
+
+from trading_system.generate_parameter import generate,print_tree,generate_all_param    
+@login_required(login_url='/account/login')
+@csrf_exempt
+def run_algo_opt(request,algo_opt_id):
+
+    if request.method == "GET":
+        algoopt = get_object_or_404(AlgoOpt, id=algo_opt_id)
+        task_id = algoopt.task_name
+        algo = get_object_or_404(MyalgoPost,id = task_id)
+        config = ParseMyalgoPost(algo)
+        data = load_algoopt(algoopt)
+        opt_map = {"调仓间隔":["balanced_date","int"],
+                   "预期收益":["target_return","float"],
+                   "预期风险":["target_risk","float"]}
+        all_canshu = []
+        for i in range(len(data.index)):
+            slices = data.iloc[i]
+            all_canshu.append(slices['优化参数'])
+            canshu = opt_map[slices['优化参数']][0]
+            step = float(slices['寻参步长'])
+            start = float(slices['优化初值'])
+            dt = int(slices['网格数量'])
+            data_type = opt_map[slices['优化参数']][1]
+            config['opt_param'].update({canshu:{"start": start, "step": step, "dt": dt,
+                  "data_type": data_type}})
+
+        res = []
+        data  = []
+        if len(config['opt_param']):
+            res = grid_search(config)
+            for i in range(len(res)):
+                data.append(res[i][0]+res[i][1:])
+            data = pd.DataFrame(data)
+            data.columns = all_canshu + ['夏普比率','alpha','最大回撤','年化收益率']
+        trade = data.to_html(classes='table table-hover')
+        return render(request,'algo/algo_opt_back_test.html',{"trade":trade})
 def load_code(algo_column):
     name = name_map[algo_column] + ".py"
     res = ""

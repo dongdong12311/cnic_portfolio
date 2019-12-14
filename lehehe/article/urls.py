@@ -27,4 +27,5 @@ urlpatterns = [
     path('redit-myalgoopt/<int:article_id>/', views.redit_myalgoopt, name="redit_myalgoopt"),   
     re_path('myalgo-opt-detail/(?P<id>\d+)/(?P<slug>[-\w]+)/$', views.myalgo_opt_detail, name="myalgo_opt_detail"),
     path('run_test/<int:article_id>/', views.run_test, name="run_test"),
+    path('run_algo_opt/<int:algo_opt_id>/', views.run_algo_opt, name="run_algo_opt"),
 ]

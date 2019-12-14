@@ -1,0 +1,260 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block title %}回测结果{% endblock %}
+{% block title2 %}回测结果{% endblock %}
+{% block content %}
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <meta charset="utf-8">
+        <title>结果</title>
+<link rel="stylesheet" href="{% static  "quant_files/css/element.min.css" %}">
+<script src="{% static  "quant_files/echarts.min.js" %}"></script>
+ <script type="text/javascript" src="{% static  "quant_files/js/echarts.js" %}"></script> 
+<link href="{% static  "quant_files/algorithm.css" %}"   rel="stylesheet">
+<link href="{% static  "quant_files/backtest.css" %}"   rel="stylesheet">
+</head>		
+
+<style>
+	body.mobile{
+		overflow-x: hidden;
+	}
+
+	#portfolio-perf-label{
+		position:relative;
+	}
+	#portfolio-perf-label .payload{
+		top:10px;
+	}
+	.mobile #live-trading-link{
+		display: none;
+	}
+	.legend-item-radio{
+		margin-left: 10px;
+	}
+	.kk_main.in_wrap{
+		min-width: 970px;
+	}
+	.mobile .kk_main.in_wrap{
+		min-width: 0;
+	}
+	@media(max-width: 1370px){
+		.legend-item[data-key="Benchmark"].powered-by{
+			display: none;
+		}
+	}
+	@media(max-width: 1200px){
+		#portfolio-perf-label .payload{
+			width:230px;
+		}
+		.legend-item-radio{
+			margin-left: 0;
+		}
+		#portfolio-perf-label{
+			padding:5px;
+		}
+	}
+	.kk_body {
+		padding-bottom: 0;
+	}
+	footer {
+		display: none !important;
+	}
+</style>
+
+<style>
+    .kk_body{
+        padding-bottom:0px;
+    }
+</style>
+
+ <style>
+        span.new{
+        background: rgba(0,0,0,0);
+    }
+    .side-bar .top .name.user-alias img{
+        width:16px;
+        height:16px;
+        float: none;
+        margin-right:0;
+    }
+    .kk_footer .wp20.last img{
+        position: relative;
+        top:-2px;
+    }
+    .kk_footer .wp20.last .item>a{
+        position: relative;
+        left:-5px;
+    }
+    </style>
+
+
+    <body>
+                                <div class="kk_main in_wrap">
+            <div class="kk_body js-jq-body top_50">
+            <div class="backtest-area content content-area old-style padding_b0">
+
+
+
+    <div name="AlgorithmModel">
+        
+        <div id="subnav" class="subnav">
+            <div style="display:inline-block;margin-top: 13px" class="fa-title-box">
+                <span id="title-box">{{algo.title}}</span>
+                            </div>
+
+        </div>
+        
+        <div id="main-pane" class="main-pane">
+            <div id="backtest-settings-outer-container" class="clearfix">
+                <div class="left-container pull-left">
+
+                    <div class="inline-block setting">
+                        <span>设置：</span>
+                        <div id="backtest-settings-summary-payload" class="backtest-settings-summary-payload white-on-tour inline-block">
+                            <span class="date backtest_start_date_display" id="startDate">{{start_date}}</span>
+                            <span> 到 </span>
+                            <span class="date backtest_end_date_display" id="endDate">{{end_date}}</span>，
+                            <span class="capital backtest_capitalbase_display" id="baseCapital">￥{{initial_capital}}</span>，
+                            <span class="capital backtest_datafrequency_display" id="frequency" value="day">每天</span>
+                        </div>
+                    </div>
+                    <div class="inline-block status">
+    
+                        <div id="done-backtest-pane" class="backtest-done-pane backtest-status-pane inline-block">
+
+                            <span id="backtest-complete">
+                                <span>回测完成</span>
+                            </span>
+                            <span class="pyVersionTag"> Python3 </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="backtest-toolbar-container pull-right">
+
+  
+		           <div class="btn-group inline-block">
+                        <a href="" class="btn">查看代码</a>
+                    </div>
+
+                    <div class="btn-group inline-block">
+                                                <a id="backtest-menu-toggle" href="#" data-toggle="dropdown" class="btn dropdown-toggle">导出<span class="caret" style="margin-left:5px"></span></a>
+                                                <ul class="dropdown-menu pull-right" id="backtest-toolbar-dropdown">
+                            <li>
+                                <a id="export-csv-button" href="" data-toggle="modal" download="data.xls">收益概述</a>
+                            </li>
+                            <li>
+                                <a id="export-transaction-button" href="#" class="logdaochu" type="transaction" backtestid="c2410765ade1149656f3c33f948f4561">交易详情</a>
+                            </li>
+                            <li>
+                                <a id="export-position-button" href="#" class="logdaochu" type="position" backtestid="b7cb0d6e505b95d8ed592bc81f469d03">持仓&amp;收益</a>
+                            </li>
+                            <li>
+                                <a id="export-log-button" href="#" class="logdaochu" type="log" backtestid="b0c37fa6a2794e5caeed239ea09490ad">日志</a>
+                            </li>
+                        </ul>
+                    </div>
+                                        		           <div class="btn-group inline-block">
+                        <a href="{% url 'article:myalgo_list' %}" class="btn">返回</a>
+                    </div>
+                </div>
+
+            </div>
+            
+            <div id="backtest-results-box" class="algorithm-area">
+            
+                <div id="ide-box" class="box ide mo-box" style="width: auto; ">
+                
+                    <div id="splitter-outer-container">
+                            <div id="splitter-pane" style="width: 2500px;" class="splitter-pane">
+                            
+                                <div  class="dailybars-output height_100pct" style="">
+                                        <div id="myVue">
+
+                                    	<el-tabs type="border-card" tab-position="left" style="">
+
+                                		<el-tab-pane label="优化详情">
+                                		<div class="title" >优化详情</div>
+                                		 <div id="headline-results" class="top-level-stats-container white-on-tour">
+                                            <div class="data-group clear">
+                                               
+                                		{% autoescape off %}{{ trade }}{% endautoescape %}
+                                		</div></div>
+                                		</el-tab-pane>
+                                		<el-tab-pane label="参考图例" >
+
+                                    <div class="title" >参考图例</div>
+
+                                    </el-tab-pane>
+
+
+                               
+                                </div>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+</div>
+</div>
+        
+<script type="text/javascript" src="{% static  "quant_files/js/vue.min.js" %}"></script>
+<script src="{% static  "quant_files/js/element.min.js" %}"></script>
+<script type="text/javascript">
+	new Vue({
+		el: '#myVue',
+		data() {
+			return {
+				activeName: 'second',
+				activeName2: 'first',
+				tabPosition: 'left',
+				editableTabsValue2: '2',
+				editableTabs2: [{
+					title: 'Tab 1',
+					name: '1',
+					content: 'Tab 1 content'
+				}, {
+					title: 'Tab 2',
+					name: '2',
+					content: 'Tab 2 content'
+				}],
+				tabIndex: 2
+			}
+		},
+		 mounted(){
+
+        },
+        
+		methods: {
+    		
+			handleClick(tab, event) {
+				console.log(tab, event);
+			},
+		
+		
+		
+		
+		
+		},
+	})
+</script>
+             
+	    
+
+
+
+
+
+
+
+
+
+
+</html>
+
+{% endblock %}

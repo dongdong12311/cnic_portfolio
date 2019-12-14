@@ -14,17 +14,19 @@
         <tr>
             <td>任务ID</td>
             <td>优化目标</td><td>详情</td>
+
 			<td>运行</td><td>删除</td>
         </tr>
         {% for algo in algoopts %}
         <tr id={{ algo.id }}>
             <td>{{ forloop.counter }}</td>
             <td>{{ algo.task_name }}</td>
-                        <td>
-                <a name="edit" href="{{ algo.get_absolute_url }}">
-                <span class="glyphicon glyphicon-pencil"></span></a>
+
+            <td>
+                <a name="edit" href="javascript:" onclick="show_algo_opt(this,'{{ algo.get_absolute_url }}')">
+                <span class="glyphicon glyphicon-file"></span></a>
             </td>
-            			<td> <a name="run" href="{% url 'article:run_test' algo.id %}">
+            			<td> <a name="run" href="{% url 'article:run_algo_opt' algo.id %}">
                 <span class="glyphicon glyphicon-play"></span></a></td>
             <td>
                 <a nane="delete" href="javascript:" onclick="del_article(this, {{ algo.id }})"><span class="glyphicon glyphicon-trash" style="margin-left:20px;"></span></a>
@@ -38,6 +40,29 @@
 </div>
 <script type="text/javascript" src="{% static "js/jquery.js" %}"></script>
 <script type="text/javascript" src="{% static "js/layer.js" %}"></script>
+<script type="text/javascript">
+    function show_algo_opt(the, algourl){
+         $.ajax({
+                url: algourl,
+                type:"GET",
+                 success : function(data) {
+                             layer.open({
+                            type: 1,
+                            skin: "layui-layer-rim",
+                            area: ["800px", "600px"],
+                            title: "任务详情",
+                            content: '<div class="text-center" style="margin-top:20px"><p>'+data+'</p> </div>',
+                        });
+                },
+            });
+
+
+
+    }
+
+
+</script>
+
 <script type="text/javascript">
     function del_article(the, article_id){
         var article_name = $(the).parents("tr").children("td").eq(1).text();

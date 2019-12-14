@@ -40,9 +40,11 @@ def handle_data(context, data):
         if context.opt_criterion == 'max_sharpe':
             weights = ef.max_sharpe()
         elif context.opt_criterion == 'efficient_return':
+            
             weights = ef.efficient_return(context.target_return)
         elif context.opt_criterion == 'efficient_risk':
-            weights = ef.efficient_risk(context.targe_risk, context.risk_free_rate)
+            
+            weights = ef.efficient_risk(context.target_risk, 0.02)
         elif context.opt_criterion == 'min_volatility':
             weights = ef.min_volatility()
         
