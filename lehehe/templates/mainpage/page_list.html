@@ -26,5 +26,103 @@
 			</div>
 		</div>
 	</section>
+<section id="overview" class="home1-how-works-area">
+		
+			<div class="how-works-video-content" align="center">
+						<div class="how-works-video-content" align="center">
+			<h2>平台介绍</h2>
+			</div>
+			<div class="container" >
+				<div class="row">
+					<div class="col-lg-12">
+					
+						<div class="how-works-video" data-aos="zoom-in">
+							<img src="{% static "img/h1-2.png" %}" alt="">
+							<a class="video-play-button" href="/">
+								<span></span>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			</div>
+			</section>
+			<section id="introduction" class="home1-how-works-area">
+			<div class="how-works-video-content" align="center">
+			<div class="how-works-content">
+				<div class="row">
+					<div class="offset-lg-3 col-lg-6">
+						<div class="section-title">
+							<h2>新手指引</h2>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<!-- How Works Item -->
+					<div class="col-lg-4 col-md-6">
+						<div class="how-works-item">
+							<div class="top-line">1</div>
+							<img src="{% static "img/icon/1.png" %}" alt="icon">
+							<h4>注册账户</h4>
+						</div>
+					</div>
+					<!-- How Works Item -->
+					<div class="col-lg-4 col-md-6">
+						<div class="how-works-item top-bor">
+							<div class="top-line ">2</div>
+							<img src="{% static "img/icon/2.png" %}" alt="icon">
+							<h4>建立模型</h4>
+						</div>
+					</div>
+					<!-- How Works Item -->
+					<div class="col-lg-4 offset-lg-0 col-md-6 offset-md-3">
+						<div class="how-works-item">
+							<div class="top-line">3</div>
+							<img src="{% static "img/icon/3.png" %}" alt="icon">
+							<h4>模型运行</h4>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<div class="row" >
+    
+</div>
+	<script src="{% static "js/jquery-3.3.1.min.js" %}"></script>
+	<script src="{% static "js/plugins.js" %}"></script>
+<script src="{% static "js/popper.min.js" %}"></script>
+<script src="{% static "js/bootstrap.min.js" %}"></script>
+<script src="{% static "js/plugins.js" %}"></script>
+<script src="{% static "js/menu.js" %}"></script>
+<script src="{% static "js/script.js" %}"></script>
 
+<script src="{% static "css/layui.css" %}"></script>
+<script type="text/javascript" src="{% static "js/layer.js"%}"></script>
+<script type="text/javascript">
+$(function(){
+    $('#hehe').on('click', function(){
+     layer.open({
+          type: 2,
+          title: '用户登录',
+          maxmin: true,
+          skin: 'layui-layer-lan',
+          shadeClose: true, //点击遮罩关闭层
+           area : ['400px' , '600px'],
+            content:"{% url 'account:user_login' %}" //弹框显示的url
+             });
+    });
+    $('#zhuce').on('click', function(){
+     layer.open({
+          type: 2,
+          title: '用户注册',
+          maxmin: true,
+          skin: 'layui-layer-lan',
+          shadeClose: true, //点击遮罩关闭层
+           area : ['600px' , '800px'],
+            content:"{% url 'account:user_register' %}" //弹框显示的url
+             });
+    });
+});
+</script>
 {% endblock %}

@@ -5,8 +5,14 @@
  ------------------------------------ 
  ====================================*/
 
-
-
+@import "../css/css_plugins/aos.css";
+@import "../css/css_plugins/magnific-popup.css";
+@import "../css/css_plugins/owl.carousel.min.css";
+@import "../css/css_plugins/owl.theme.default.min.css";
+@import "../css/css_plugins/reset.css";
+@import "../css/css_plugins/typography.css";
+@import "../css/css_plugins/custom-animation.css";
+@import "../css/css_section/home_1.css";
 /*----------------------------------------*/
 /* Template default CSS
 /*----------------------------------------*/
@@ -1823,3 +1829,5 @@ ol {
 		padding-left: 0;
 	}
 }
+
+

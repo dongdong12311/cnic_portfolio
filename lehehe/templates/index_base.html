@@ -18,6 +18,9 @@
 	<link rel="stylesheet" href="{% static "css/animate.css" %}"/>
 	<link rel="stylesheet" href="{% static "css/owl.carousel.css" %}"/>
 	<link rel="stylesheet" href="{% static "css/style.css" %}"/>
+	<link rel="stylesheet" href="{% static "css/fontawesome-all.min.css" %}"/>
+	<link rel="stylesheet" href="{% static "css/flaticon.css" %}"/>
+	<link rel="stylesheet" href="{% static "css/responsive.css" %}"/>
 </head>
 
 <body>
@@ -34,15 +37,15 @@
 			<nav class="main-menu">
 				<ul class="menu-list">
             <li><a href="\">首页</a></li>
-                <li><a href="{% url 'article:myalgo_list' %}">平台介绍</a></li>
-                <li><a href="{% url 'article:myalgo_list' %}">新手指引</a></li>
+                <li><a href="#overview">平台介绍</a></li>
+                <li><a href="#introduction">新手指引</a></li>
 				<li><a href="{% static "docs/index.html" %}"/>API文档</a></li>
                 {% if user.is_authenticated %}
                 <li><a href="{% url 'account:user_logout' %}">退出登录</a></li>
                 <li>           </li>
                 {% else %}
-                <li><a href="{% url 'account:user_login' %}">登录</a></li>
-                <li><a href="{% url 'account:user_register' %}">注册</a></li>
+                <li><a href="javascript:void(0);" id="hehe">登录</a></li>
+                <li><a href="javascript:void(0);" id="zhuce">注册</a></li>
                 {% endif %}
 				</ul>
 			</nav>
@@ -56,6 +59,13 @@
 	<script src="{% static "js/jquery-3.2.1.min.js" %}"></script>
 	<script src="{% static "js/owl.carousel.min.js" %}"></script>
 	<script src="{% static "js/main.js" %}"></script>
+	
+			<script src="{% static "js/plugins.js" %}"></script>
+<script src="{% static "js/popper.min.js" %}"></script>
+<script src="{% static "js/plugins.js" %}"></script>
+<script src="{% static "js/menu.js" %}"></script>
+<script src="{% static "js/script.js" %}"></script>
+	
 {% block javascript %} {% endblock %}
 </body>
 </html>

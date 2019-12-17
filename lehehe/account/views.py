@@ -16,7 +16,7 @@ def user_login(request):
             user = authenticate(username=cd['username'], password=cd['password'])
             if user:
                 login(request, user)
-                return render(request,'mainpage/page_list.html')
+                return HttpResponse("登录成功")
             else:
                 return HttpResponse("Sorry. Your username or password is not right.")
         else:

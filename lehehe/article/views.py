@@ -207,11 +207,12 @@ def ParseMyalgoPost(algo):
         initial_capital = float(algo.initial_capital)
         balanced_dates = int(algo.balanced_dates)
         expected_return_days= int(algo.expected_return_days)
+
     except:
         pass
     
-    target_return = algo.target_return
-    target_risk = algo.target_risk
+    target_return = float(algo.target_return)
+    target_risk = float(algo.target_risk)
     
     cov_method  = algo.cov_method
     
@@ -262,7 +263,7 @@ def run_test(request,article_id):
         stragety = __import__(config['stragety'])
 
         res = Run_func(stragety.initialize,stragety.handle_data,config)
-
+        
         
         data = res['sys_analyser']
         portfolio_series = data['portfolio']['unit_net_value']
