@@ -203,16 +203,18 @@ def ParseMyalgoPost(algo):
     initial_capital = 0
     balanced_dates= 0
     expected_return_days = 0
+    target_return = 0
+    target_risk = 0
     try:
         initial_capital = float(algo.initial_capital)
         balanced_dates = int(algo.balanced_dates)
         expected_return_days= int(algo.expected_return_days)
-
+        target_return = float(algo.target_return)
+        target_risk = float(algo.target_risk)
     except:
         pass
     
-    target_return = float(algo.target_return)
-    target_risk = float(algo.target_risk)
+
     
     cov_method  = algo.cov_method
     
