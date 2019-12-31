@@ -86,7 +86,7 @@ def article_post(request):
                 new_article.save()
                 return HttpResponse("1")
             except:
-                return HttpResponse("2")
+                return HttpResponse("2111")
         else:
             return HttpResponse("3")
     else:

@@ -3,12 +3,12 @@
 {% block title %}模型编辑{% endblock %}
 {% block title2 %}模型编辑{% endblock %}
 
-{% block jspubfunction %}"redit_article()"{% endblock %}
 
 {% block formscript %}
 <script type="text/javascript" src="{% static "js/jquery.js" %}"></script>
 <script type="text/javascript" src="{% static "editor/editormd.min.js" %}"></script>
 <script type="text/javascript" src="{% static "js/layer.js"%}"></script>
+<script src="{% static "js/jquery.steps.js" %}"></script>
 
 
 <script type="text/javascript">
@@ -61,5 +61,27 @@ function redit_article(){
 }
 
 </script>
+            <script>
+                $(function (){
+                    $("#example-advanced-form").steps({
+                        headerTag: "h3",
+                        bodyTag: "fieldset",
 
+			labels: {
+			cancel: "Cancel",
+			current: "current step:",
+			pagination: "Pagination",
+			finish: "生成模型",
+			next: "下一步",
+			previous: "上一步",
+
+  			  },
+			    onFinished: function (event, currentIndex)
+			    {
+				redit_article();
+			    }
+
+                    });
+                });
+            </script>
 {% endblock %}

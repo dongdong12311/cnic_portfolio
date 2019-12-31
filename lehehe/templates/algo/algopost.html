@@ -2,11 +2,12 @@
 {% load staticfiles %}
 {% block title %}模型设计{% endblock %}
 {% block title2 %}模型设计 {% endblock %}
-{% block jspubfunction %}"publish_article()"{% endblock %}
+
 
 
 {% block formscript %}
 <script type="text/javascript" src="{% static "js/jquery.js" %}"></script>
+<script src="{% static "js/jquery.steps.js" %}"></script>
 <script type="text/javascript" src="{% static "js/layer.js"%}"></script>
 <script type="text/javascript">
 function publish_article(){
@@ -60,5 +61,27 @@ function publish_article(){
 }
 
 </script>
+            <script>
+                $(function (){
+                    $("#example-advanced-form").steps({
+                        headerTag: "h3",
+                        bodyTag: "fieldset",
 
+			labels: {
+			cancel: "Cancel",
+			current: "current step:",
+			pagination: "Pagination",
+			finish: "生成模型",
+			next: "下一步",
+			previous: "上一步",
+
+  			  },
+			    onFinished: function (event, currentIndex)
+			    {
+				publish_article();
+			    }
+
+                    });
+                });
+            </script>
 {% endblock %}
